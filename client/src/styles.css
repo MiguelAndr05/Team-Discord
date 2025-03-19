@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+
+header{
+    background-color: rgba(110, 102, 102, 0.76);
+    width: 100%;
+    border-radius: 0.5rem 0.5rem;
+}
+
+ul.header{
+    display: inline-flex;
+    text-decoration: none;
+    list-style-type: none;
+    justify-content: flex-start;
+    padding: 0;
+    padding: 0.5rem;
+}
+
+ul.header li {
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    border: 0.25rem solid rgb(56, 56, 56);
+    border-radius: 10% 10%;
+    background-color: rgb(189, 189, 189);
+}
+
+a:link, a:visited{
+    text-decoration: none;
+    color: rgb(0,0,0);
+}

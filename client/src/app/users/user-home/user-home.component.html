@@ -1,0 +1,36 @@
+<h1>View Users</h1>
+<!-- CRUD functionality -->
+<!-- CREATE button -->
+<a class="btn btn-primary" (click)="appendListElement()">Add a new project</a>
+<!-- READ Show tables to view all projects in DB -->
+<table class="table table-hover table-striped">
+    <thead>
+        <th>User ID</th>
+        <th>Friend ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Phone No.</th>
+        <th>friends List</th>
+        <th>Friend Requests</th>
+    </thead>
+    <tbody>
+        <!-- Enhanced for loop displaying each user obj info -->
+        @for (user of userList; track $index) {
+        <tr>
+            <td>{{this.userList[$index].userId}}</td>
+            <td>{{this.userList[$index].friendId}}</td>
+            <td>{{this.userList[$index].userName}}</td>
+            <td>{{this.userList[$index].email}}</td>
+            <td>{{this.userList[$index].phoneNumber}}</td>
+            <td>{{this.userList[$index].friendsList}}</td>
+            <td>{{this.userList[$index].friendRequests}}</td>
+            <!-- DELETE and UPDATE buttons -->
+            <td>
+                <a class="btn btn-info">Update</a>
+                &nbsp;
+                <a class="btn btn-danger" (click)="deleteListElement()">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

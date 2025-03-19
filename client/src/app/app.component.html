@@ -1,9 +1,16 @@
 <!--app.component.html-->
- 
-<h1 style="color: green; 
-font-style: italic;">
-GEEKS FOR GEEKS
-</h1>
+<header>
+    <ul class="header">
+        <li>
+        <a routerLink="">Home</a>
+      </li>
+      <li>
+        <a routerLink="/users/user-home">Users</a>
+      </li>
+    </ul>
+</header>
+<router-outlet>
+<h1>{{title}} - Home</h1>
 <h3>
 Build a Simple Web App with Express & Angular
 </h3>
