@@ -1,13 +1,11 @@
 //app.module.ts
 
 import { NgModule } from '@angular/core';
-import { BrowserModule } 
-    from '@angular/platform-browser';
-import { AppRoutingModule } 
-    from './app-routing.module';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { provideHttpClient } 
-    from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
+import { ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -16,6 +14,7 @@ import { provideHttpClient }
     imports: [
         BrowserModule,
         AppRoutingModule,
+        ReactiveFormsModule
     ],
     providers: [provideHttpClient()],
     bootstrap: [AppComponent]

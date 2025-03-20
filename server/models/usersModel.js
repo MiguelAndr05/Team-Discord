@@ -18,7 +18,7 @@ const usersSchema = new Schema({
         unique: true,
         default: () => randomId(8)
     },
-    userName: {
+    username: {
         type: String, 
         required: true
     },
@@ -27,19 +27,19 @@ const usersSchema = new Schema({
         required: true,
         unique: true
     },
-    phoneNumber: {
+    phonenumber: {
         type: String,
         unique: true
     },
     //Array of objects to store friends list and a friend requests list
-    friendsList:[{
-        type: String,
-        ref: "User"
-    }],
-    friendRequests: [{
-        type: String, 
-        ref: "User"
-    }]
+    // friendsList:[{
+    //     type: String,
+    //     ref: "User"
+    // }],
+    // friendRequests: [{
+    //     type: String, 
+    //     ref: "User"
+    // }]
 });
 
 //Create model
