@@ -1,23 +1,38 @@
-//server.js
+// server/server.js
 
-const express = require('express');
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const usersRoutes = require("./routes/usersRoutes"); // Import user routes
+
 const app = express();
 
-// handling CORS
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", 
-               "http://localhost:4200");
-    res.header("Access-Control-Allow-Headers", 
-               "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+// Middleware
+app.use(cors({
+    origin: "http://localhost:4200",
+    credentials: true
+}));
+app.use(express.json()); // Parses incoming JSON requests
+
+// Connect to MongoDB
+mongoose.connect("mongodb://localhost:27017/discordLite", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.log("MongoDB connection error:", err));
+
+// Routes
+app.use("/users", usersRoutes);
+
+// Test API Endpoint
+app.get("/api/message", (req, res) => {
+    res.json({ message: "Hello GEEKS FOR GEEKS Folks from the Express server!" });
 });
 
-// route for handling requests from the Angular client
-app.get('/api/message', (req, res) => {
-    res.json({ message: 
-            'Hello GEEKS FOR GEEKS Folks from the Express server!' });
+// Start the Server
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
 });
 
-app.listen(3000, () => {
-    console.log('Server listening on port 3000');
-});
