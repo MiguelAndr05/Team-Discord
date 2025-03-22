@@ -5,18 +5,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideHttpClient } from '@angular/common/http';
-import { UserHomeComponent } from './users/user-home/user-home.component';
+import { ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    UserHomeComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-  ],
-  providers: [provideHttpClient()],
-  bootstrap: [AppComponent, UserHomeComponent]
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule
+    ],
+    providers: [provideHttpClient()],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,22 +1,27 @@
 <!--app.component.html-->
-<header>
-    <ul class="header">
-        <li>
-        <a routerLink="">Home</a>
-      </li>
-      <li>
-        <a routerLink="/users/user-home">Users</a>
-      </li>
-    </ul>
-</header>
-<router-outlet>
-<h1>{{title}} - Home</h1>
+
+<h1 style="color: green; 
+           font-style: italic;">
+    GEEKS FOR GEEKS
+</h1>
 <h3>
-Build a Simple Web App with Express & Angular
+    Build a Simple Web App with Express & Angular
 </h3>
 <h5>
-The below message is fetched from the express backend
+    The below message is fetched from the express backend
 </h5>
 <p *ngIf="message">
-{{ message.message }}
+    {{ message.message }}
 </p>
+<form [formGroup]="userForm" (submit)="onSubmit()">
+    
+    <label>User Name</label>
+    <input type="text" name="username" id="username" formControlName="username" required/>
+    <label>Email</label>
+    <input type="text" name="email" id="email" formControlName="email" required/>
+    <label>Phone Number</label>
+    <input type="text" name="phonenumber" id="phonenumber" formControlName="phonenumber" required/>
+
+    <input type="submit"/>
+
+</form>
