@@ -40,4 +40,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+<<<<<<< HEAD
 .env
+=======
+>>>>>>> cc727e93faf8ca41a9b09379de6f9a22e3390b85
