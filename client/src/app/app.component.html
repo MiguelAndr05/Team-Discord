@@ -13,3 +13,15 @@
 <p *ngIf="message">
     {{ message.message }}
 </p>
+<form [formGroup]="userForm" (submit)="onSubmit()">
+    
+    <label>User Name</label>
+    <input type="text" name="username" id="username" formControlName="username" required/>
+    <label>Email</label>
+    <input type="text" name="email" id="email" formControlName="email" required/>
+    <label>Phone Number</label>
+    <input type="text" name="phonenumber" id="phonenumber" formControlName="phonenumber" required/>
+
+    <input type="submit"/>
+
+</form>
