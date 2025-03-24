@@ -36,6 +36,8 @@ export class HomeComponent implements OnInit {
       if (this.userForm.valid) {
         this.apiService.postUser(this.userForm.value).subscribe(response => {
           console.log("User submitted:", response);
+          // updates user list on page
+          this.ngOnInit()
         });
       } else {
         console.log("Form is invalid!");

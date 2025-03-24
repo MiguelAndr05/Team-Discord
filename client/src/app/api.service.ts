@@ -7,7 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     providedIn: 'root'
 })
 export class ApiService {
-    private apiUrl = 'http://localhost:3000/api/message';
+    private apiUrl = 'http://localhost:3000/users';
    
     constructor(private http: HttpClient) { }
     getMessage() {
