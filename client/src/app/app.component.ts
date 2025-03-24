@@ -1,8 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from './api.service';
-import { FormControl, FormGroup } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
+import { Component} from '@angular/core';
+
 
 @Component({
   selector: 'app-root',
@@ -11,41 +8,10 @@ import { BrowserModule } from '@angular/platform-browser';
   styleUrls: ['./app.component.css'],
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent {
   
-
-
-
-    title = 'client';
-    message: any;
-    constructor(private apiService: ApiService) { };
-      userForm = new FormGroup({
-      username: new FormControl(''),
-      email: new FormControl(''),
-      phonenumber: new FormControl(''),
-    });
+  title = 'client';
     
-
-    ngOnInit() {
-      this.apiService.getMessage().subscribe(data => {
-        this.message = data;
-        console.log(data);
-      });
-    }
-
-
-
-
-    onSubmit() {
-      if (this.userForm.valid) {
-        this.apiService.postUser(this.userForm.value).subscribe(response => {
-          console.log("User submitted:", response);
-        });
-      } else {
-        console.log("Form is invalid!");
-      }
-    }
-
 
 }
 

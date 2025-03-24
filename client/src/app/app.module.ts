@@ -6,17 +6,25 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule} from '@angular/forms';
+import { HomeComponent } from './components/home/home.component';
+import { FriendListComponent } from './components/friend-list/friend-list.component';
+import { provideRouter } from '@angular/router';
+import { Routes } from '@angular/router';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        HomeComponent,
+        FriendListComponent
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         ReactiveFormsModule
     ],
-    providers: [provideHttpClient()],
+    
+    //provideRouter()
+    providers: [provideHttpClient(), ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
