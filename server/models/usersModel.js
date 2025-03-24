@@ -32,14 +32,14 @@ const usersSchema = new Schema({
         unique: true
     },
     //Array of objects to store friends list and a friend requests list
-    // friendsList:[{
-    //     type: String,
-    //     ref: "User"
-    // }],
-    // friendRequests: [{
-    //     type: String, 
-    //     ref: "User"
-    // }]
+    friendsList:[{
+        type: String,
+        ref: "User"
+    }],
+    friendRequests: [{
+        type: String, 
+        ref: "User"
+    }]
 });
 
 //Create model

@@ -10,12 +10,14 @@ import { HomeComponent } from './components/home/home.component';
 import { FriendListComponent } from './components/friend-list/friend-list.component';
 import { provideRouter } from '@angular/router';
 import { Routes } from '@angular/router';
+import { AccountCreationComponent } from './components/account-creation/account-creation.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
-        FriendListComponent
+        FriendListComponent,
+        AccountCreationComponent
     ],
     imports: [
         BrowserModule,
