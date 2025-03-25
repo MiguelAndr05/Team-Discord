@@ -12,8 +12,7 @@
         <h1>Discord</h1>
         <h3>Build a Simple Web App with Express & Angular</h3>
         <h5>The below message is fetched from the express backend</h5>
-        <p *ngIf="message">{{ message.message }}</p>
-        <form [formGroup]="userForm" (submit)="onSubmit()">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
             <label>User Name</label>
             <input type="text" name="username" id="username" formControlName="username" required />
             <label>Email</label>
@@ -23,5 +22,19 @@
             <input type="submit" value="Submit" />
         </form>
     </div>
+    @for (user of users; track $index) {
+    <div>
+        
+        {{user.username}}
+        |
+        {{user.email}}
+        |
+        {{user.phonenumber}}
+        <button [routerLink]="'/Details/' + user._id" >View</button>
+        <button [routerLink]="'/Edit/' + user._id">Update</button>
+        &nbsp;
+        <button (click)="deleteClicked(user)">Delete</button>
+    </div>
+}
 </body>
 </html>

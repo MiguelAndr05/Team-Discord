@@ -8,19 +8,24 @@ import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule} from '@angular/forms';
 import { HomeComponent } from './components/home/home.component';
 import { FriendListComponent } from './components/friend-list/friend-list.component';
-import { provideRouter } from '@angular/router';
+import { DetailsComponent } from './components/details/details.component';
+import { ActivatedRoute, provideRouter, RouterLink, RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
+import { EditComponent } from './components/edit/edit.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
-        FriendListComponent
+        FriendListComponent,
+        DetailsComponent,
+        EditComponent
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        RouterModule
     ],
     
     //provideRouter()
