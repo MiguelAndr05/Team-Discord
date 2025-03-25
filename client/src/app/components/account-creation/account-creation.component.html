@@ -1,1 +1,23 @@
-<p>account-creation works!</p>
+<div class="container">
+    <h1>Account Creation</h1>
+    <form [formGroup]="userForm" (ngSubmit)="register()">
+      <label for="username">Username:</label>
+      <input id="username" formControlName="username" required />
+  
+      <label for="password">Password:</label>
+      <input id="password" type="password" formControlName="password" required />
+  
+      <button type="submit">Register</button>
+    </form>
+  
+    <h2>Login</h2>
+    <form [formGroup]="userForm" (ngSubmit)="login()">
+      <label for="username">Username:</label>
+      <input id="username" formControlName="username" required />
+  
+      <label for="password">Password:</label>
+      <input id="password" type="password" formControlName="password" required />
+  
+      <button type="submit">Login</button>
+    </form>
+  </div>

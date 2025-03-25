@@ -12,6 +12,7 @@ import { provideRouter } from '@angular/router';
 import { Routes } from '@angular/router';
 import { AccountCreationComponent } from './components/account-creation/account-creation.component';
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -22,11 +23,12 @@ import { AccountCreationComponent } from './components/account-creation/account-
     imports: [
         BrowserModule,
         AppRoutingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        AccountCreationComponent,
+       
     ],
-    
-    //provideRouter()
-    providers: [provideHttpClient(), ],
+    providers: [provideHttpClient()],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {}

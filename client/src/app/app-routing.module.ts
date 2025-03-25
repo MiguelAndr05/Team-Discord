@@ -10,7 +10,7 @@ const routes: Routes = [
   {path: '', redirectTo: 'Home', pathMatch: 'full'},
   {path: 'Home', component: HomeComponent},
   {path: 'FriendList', component: FriendListComponent},
-  {path: 'AccountCreation', component: AccountCreationComponent}
+  {path: 'account-creation', component: AccountCreationComponent}
 
 ];
 

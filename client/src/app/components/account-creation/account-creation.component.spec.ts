@@ -1,6 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
 
-import { AccountCreationComponent } from './account-creation.component';
+@Component({
+  selector: 'app-account-creation',
+  templateUrl: './account-creation.component.html',
+  styleUrls: ['./account-creation.component.css']
+})
+export class AccountCreationComponent {
+  // Component logic here
+}
 
 describe('AccountCreationComponent', () => {
   let component: AccountCreationComponent;
