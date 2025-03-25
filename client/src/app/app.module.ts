@@ -12,6 +12,7 @@ import { DetailsComponent } from './components/details/details.component';
 import { ActivatedRoute, provideRouter, RouterLink, RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 import { EditComponent } from './components/edit/edit.component';
+import { AccountCreationComponent } from './components/account-creation/account-creation.component';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { EditComponent } from './components/edit/edit.component';
         HomeComponent,
         FriendListComponent,
         DetailsComponent,
-        EditComponent
+        EditComponent,
+        AccountCreationComponent
     ],
     imports: [
         BrowserModule,

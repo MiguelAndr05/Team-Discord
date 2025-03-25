@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { FriendListComponent } from './components/friend-list/friend-list.component';
 import { DetailsComponent } from './components/details/details.component';
 import { EditComponent } from './components/edit/edit.component';
+import { AccountCreationComponent } from './components/account-creation/account-creation.component';
 
 
 //Array of routes to each component
@@ -12,8 +13,8 @@ const routes: Routes = [
   {path: 'Home', component: HomeComponent},
   {path: "Details/:id", component: DetailsComponent},
   {path: "Edit/:id", component : EditComponent},
-  {path: 'FriendList', component: FriendListComponent}
-
+  {path: 'FriendList', component: FriendListComponent},
+  {path: 'AccountCreation', component: AccountCreationComponent}
 ];
 
 @NgModule({

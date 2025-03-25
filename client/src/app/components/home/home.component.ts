@@ -14,21 +14,23 @@ import { BrowserModule } from '@angular/platform-browser';
 export class HomeComponent implements OnInit {
 
   message: any;
-
+  // constructor w/ApiService as a parameter to use it
   constructor(private apiService: ApiService) { };
-
+  // ! tells type checker that userForm is non-null and non-undefined
   userForm!: FormGroup;
 
   // Users list based off model
   users!: User[];
 
-  
+  // called after initialization
   ngOnInit() {
+    // creates formgroup based on values in submit form
     this.userForm = new FormGroup({
       username: new FormControl('', Validators.required),
       email: new FormControl('', Validators.email),
-      phonenumber: new FormControl('', Validators.required),
+      phonenumber: new FormControl(''),
     });
+    // uses get message from api.service.ts to grab users list
     this.apiService.getMessage().subscribe(
       data => {
         console.log("Users", data);
@@ -39,13 +41,14 @@ export class HomeComponent implements OnInit {
       }
     );
   }
-
+  // prompts with a popup window to confirm deletion, then deletes user and refreshes list
   deleteClicked(user: User){
     if(window.confirm("Are you sure you want to delete this user: " + user.username + " ?")){
+      // uses Delete function from api.Service.ts
       this.apiService.delete(user._id).subscribe(
         data => {
+          // recalls function to get List of Users
           this.ngOnInit();
-
         },
         error => {
           console.error("error: ", error);
@@ -55,10 +58,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
-
+  // 
   onSubmit() {
-    console.log("Submit clicked");
     if (this.userForm.valid) {
+      // calls postUser function from api.service.ts
     this.apiService.postUser(this.userForm.value).subscribe(
       response => {
         console.log("User submitted:", response);

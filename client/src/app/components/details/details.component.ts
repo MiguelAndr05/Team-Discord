@@ -11,10 +11,15 @@ import { User } from '../../models/user';
 })
 export class DetailsComponent implements OnInit{
 
+  // injection to use objects 
   private activatedRouter = inject(ActivatedRoute);
   private ApiService = inject(ApiService);
+  
+  // ! tells type checker that variables are non-null and non-undefined
   user!: User;
   userId!: string;
+  
+  // called after initialization
   ngOnInit(){
     // Grabs user ID from url
     this.userId = this.activatedRouter.snapshot.params["id"];
