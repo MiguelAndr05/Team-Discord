@@ -1,55 +1,64 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../models/usersModel');
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const User = require('../models/usersModel');
 
-/* GET users listing. */
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
+// Registration Route
+router.post('/register', async (req, res) => {
+  try {
+    const { username, email, phonenumber, password } = req.body;
 
-// router.get('/', function(req, res, next){
-//   res.send("Hello Angular");
-// });
-
-// router.get('/', (req, res) => {
-//   res.json({ message: 
-//           'Hello GEEKS FOR GEEKS Folks from the Express server!' });
-// });
-
-router.post('/', async (req, res) => {
-  try{
-    console.log(req.body);
-
-    //validate body objects
-    if (!req.body.username || !req.body.email || !req.body.phonenumber) {
-      return res.status(400).json({ error: "Missing required fields" });
+    if (!username || !email || !phonenumber || !password) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    var user = new User({
-      username: req.body.username, 
-      email: req.body.email,
-      phonenumber: req.body.phonenumber
-     });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
 
-     //Save to DB
-     await user.save();
-     //Send a response if successful
-     res.status(201).json({ message: 
-      'success, posted new user', user });
-  }catch(error){
-    console.error("Error creating user", error);
-    //http status req
-    res.status(500).json({ error: "Internal Server Error" });
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
+    const newUser = new User({
+      username,
+      email,
+      phonenumber,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+    res.status(201).json({ message: 'User registered successfully', user: newUser });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-  
-  
-
-  
-
-  
 });
 
+// Login Route
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      return res.status(401).json({ error: info.message || 'Invalid credentials' });
+    }
 
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      res.json({ message: 'Login successful', user });
+    });
+  })(req, res, next);
+});
 
+// Logout Route
+router.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.error('Error logging out:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    res.json({ message: 'Logout successful' });
+  });
+});
 
 module.exports = router;
