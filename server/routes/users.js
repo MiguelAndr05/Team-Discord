@@ -35,8 +35,13 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login Route
 router.post('/login', (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
     if (!user) {

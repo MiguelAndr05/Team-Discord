@@ -6,16 +6,15 @@ var cors = require("cors");
 var session = require("express-session");
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
-var bcrypt = require("bcryptjs");                
+var bcrypt = require("bcryptjs");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-require('./configs/passport'); 
-//Import configurations and mongoose
+require('./configs/passport'); // Ensure Passport configuration is loaded
 var configs = require("./configs/globals");
 var mongoose = require("mongoose");
 var User = require("./models/usersModel"); // Import the User model
 
-//Connect to mongoDB
+// Connect to MongoDB
 mongoose
   .connect(configs.ConnectionString.MongoDB)
   .then(() => {
@@ -27,14 +26,14 @@ mongoose
 
 var app = express();
 
-//CORS Middleware (Explicit Configuration)
+// CORS Middleware (Explicit Configuration)
 app.use(cors({
-  origin: "http://localhost:4200",  //Allow Angular frontend
-  methods: "GET,POST,PUT,DELETE,OPTIONS",  //Allowed request methods
-  allowedHeaders: "Content-Type,Authorization"  //Allowed headers
+  origin: "http://localhost:4200", // Allow Angular frontend
+  methods: "GET,POST,PUT,DELETE,OPTIONS", // Allowed request methods
+  allowedHeaders: "Content-Type,Authorization" // Allowed headers
 }));
 
-//Handle preflight requests (OPTIONS method)
+// Handle preflight requests (OPTIONS method)
 app.options("*", cors());
 
 app.use(logger("dev"));
@@ -51,38 +50,47 @@ app.use(passport.session());
 
 // Passport Local Strategy
 passport.use(
-  new LocalStrategy((username, password, done) => {
-    User.findOne({ username }, (err, user) => {
-      if (err) return done(err);
-      if (!user) return done(null, false, { message: "User not found" });
+  new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
+    try {
+      const user = await User.findOne({ email }); // Use async/await
+      if (!user) {
+        return done(null, false, { message: "User not found" });
+      }
 
-      if (!bcrypt.compareSync(password, user.password))
+      const isMatch = bcrypt.compareSync(password, user.password);
+      if (!isMatch) {
         return done(null, false, { message: "Incorrect password" });
+      }
 
       return done(null, user);
-    });
+    } catch (err) {
+      return done(err);
+    }
   })
 );
 
 passport.serializeUser((user, done) => done(null, user.id));
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id); // Use async/await
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
 });
 
 // Routes
 app.post("/register", async (req, res) => {
-  const { username, password, email, phonenumber } = req.body;
+  const { username, password, email } = req.body;
 
   // Validate input
-  if (!username || !password) {
+  if (!username || !password || !email) {
     return res.status(400).json({ message: "Username, password, and email are required" });
   }
 
   try {
     // Check if the user already exists
-    const existingUser = await User.findOne({ username });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -94,8 +102,7 @@ app.post("/register", async (req, res) => {
     const newUser = new User({
       username,
       password: hashedPassword,
-      email,
-      phonenumber
+      email
     });
 
     await newUser.save();
@@ -111,7 +118,11 @@ app.post("/login", passport.authenticate("local"), (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  req.logout(() => {
+  req.logout((err) => {
+    if (err) {
+      console.error("Error during logout:", err);
+      return res.status(500).json({ message: "Error during logout" });
+    }
     res.json({ message: "Logged out" });
   });
 });
@@ -121,8 +132,8 @@ app.use("/users", usersRouter);
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-}); 
+  console.log(`Server is running on port ${PORT}`);
+});
 
 module.exports = app;
 

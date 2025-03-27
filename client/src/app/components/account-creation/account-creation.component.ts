@@ -13,13 +13,15 @@ export class AccountCreationComponent implements OnInit {
   userForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
-    email: new FormControl(''), // Add the email field
+    email: new FormControl(''),
   });
   
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {}
+
+
 
   register() {
     const { username, password, email } = this.userForm.value; // Include email
@@ -31,8 +33,8 @@ export class AccountCreationComponent implements OnInit {
   }
 
   login() {
-    const { username, password } = this.userForm.value;
-    this.http.post('http://localhost:3000/login', { username, password })
+    const {username,  email, password } = this.userForm.value; // Use email instead of username
+    this.http.post('http://localhost:3000/login', { username, email, password })
       .subscribe({
         next: () => alert('Login successful!'),
         error: (err) => alert('Login failed: ' + err.message)
