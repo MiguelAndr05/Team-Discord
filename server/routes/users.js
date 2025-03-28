@@ -1,128 +1,69 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../models/usersModel');
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const User = require('../models/usersModel');
 
-// GET list of Users using try & catch block
-router.get("/", async (req, res, next) => {
-  try{
-    const users = await User.find();
-    res.status(200).json(users);
+// Registration Route
+router.post('/register', async (req, res) => {
+  try {
+    const { username, email, phonenumber, password } = req.body;
 
-  }catch(error){
-    res.status(500).json({ message: "GET failed, an error has occurred:", error: error});
-
-  }
-});
-
-// GET finding a user by ID
-router.get("/:id", async (req, res, next) => {
-  try{
-    let id = req.params.id;
-    const users = await User.findOne({_id: id});
-    res.status(200).json(users);
-
-  }catch(error){
-    res.status(500).json({ message: "GET failed, an error has occurred:", error: error});
-
-  }
-});
-
-// POST gets info from form and saves it to the database
-router.post('/', async (req, res) => {
-  try{
-    console.log(req.body);
-
-    // Validate body objects
-    if (!req.body.username || !req.body.email || !req.body.phonenumber) {
-      return res.status(400).json({ error: "Missing required fields" });
+    if (!username || !email || !phonenumber || !password) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
-    // Adding field values to user obj
-    var user = new User({
-      username: req.body.username, 
-      email: req.body.email,
-      phonenumber: req.body.phonenumber
-     });
 
-     // Save to DB
-     await user.save();
-     // Send a response if successful
-     res.status(201).json({ message: 
-      'success, posted new user', user });
-  }catch(error){
-    console.error("Error creating user", error);
-    //http status req
-    res.status(500).json({ error: "Internal Server Error" });
-
-  }
-  
-});
-
-// PUT update an existing user
-router.put('/:id', async (req, res) => {
-  try{
-    console.log(req.body);
-
-    // Validate body objects
-    
-    if (!req.body.username || !req.body.email || !req.body.phonenumber) {
-      return res.status(400).json({ error: "Missing required fields" });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists' });
     }
-    
 
-    let id = req.params.id;
-    // Adding field values to user obj
-    
-    let user = req.body;
-     
-     // finds user w/ID and updates in Database
-     let updatedUser = await User.findOneAndUpdate(
-      {
-        _id: id
-      },
-      {
-        // setting user data into obj to update it
-        $set: user
-      },
-      {
-        // true uses the updated version of obj, not pre update version
-        new: true
-      }
-    );
-     // Send a response if successful
-     res.status(200).json({ message: 
-      'success, updated existing user', updatedUser });
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
-  }catch(error){
-    console.error("Error updating user", error);
+    const newUser = new User({
+      username,
+      email,
+      phonenumber,
+      password: hashedPassword,
+    });
 
-    //http status req
-    res.status(500).json({ error: "Internal Server Error" });
-    
+    await newUser.save();
+    res.status(201).json({ message: 'User registered successfully', user: newUser });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-  
 });
 
-// DELETE deletes existing user from the Database
-router.delete('/:id', async (req, res) => {
-  try{
-    let id = req.params.id;
-    let deletedUser = await User.deleteOne({ _id: id});
+router.post('/login', (req, res, next) => {
+  const { email, password } = req.body;
 
-    // Send a response if successful
-    res.status(200).json(
-      { message: 'success, deleted existing user', deletedUser });
-
-  }catch(error){
-    console.error("Error deleting user", error);
-
-    //http status req
-    res.status(500).json({ error: "Internal Server Error" });
-    
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
   }
-  
+
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      return res.status(401).json({ error: info.message || 'Invalid credentials' });
+    }
+
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      res.json({ message: 'Login successful', user });
+    });
+  })(req, res, next);
 });
 
-
-
+// Logout Route
+router.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.error('Error logging out:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    res.json({ message: 'Logout successful' });
+  });
+});
 
 module.exports = router;
