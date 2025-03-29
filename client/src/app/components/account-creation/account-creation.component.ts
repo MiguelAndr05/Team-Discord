@@ -1,6 +1,13 @@
+
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
+
+import { Component, Inject, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-account-creation',
@@ -10,6 +17,10 @@ import { FormGroup, FormControl } from '@angular/forms';
 
 })
 export class AccountCreationComponent implements OnInit {
+
+  
+  constructor(private http: HttpClient, private router: Router) {}
+
   userForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
@@ -17,9 +28,21 @@ export class AccountCreationComponent implements OnInit {
   });
   
 
+
   constructor(private http: HttpClient) {}
 
   ngOnInit() {}
+
+
+
+  toLogin(){
+    this.router.navigate(["/login"])
+    .then(nav => {
+      console.log(nav);
+    }, err => {
+      console.log("Navigation to /login error: ", err) // when there's an error
+    });
+  }
 
 
 
@@ -32,6 +55,7 @@ export class AccountCreationComponent implements OnInit {
       });
   }
 
+
   login() {
     const {username,  email, password } = this.userForm.value; // Use email instead of username
     this.http.post('http://localhost:3000/login', { username, email, password })
@@ -40,4 +64,5 @@ export class AccountCreationComponent implements OnInit {
         error: (err) => alert('Login failed: ' + err.message)
       });
   }
+
 }

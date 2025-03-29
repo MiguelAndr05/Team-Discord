@@ -7,13 +7,22 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms'; // Ensure For
 import { HomeComponent } from './components/home/home.component';
 import { FriendListComponent } from './components/friend-list/friend-list.component';
 import { AccountCreationComponent } from './components/account-creation/account-creation.component';
+<<<<<<< HEAD
+=======
+import { LoginComponent } from './components/login/login.component';
+>>>>>>> 5160624370ee10cf43bc1d178ba469a72ac5f6db
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
         FriendListComponent,
+<<<<<<< HEAD
         AccountCreationComponent // Declare the component here
+=======
+        AccountCreationComponent,
+        LoginComponent // Declare the component here
+>>>>>>> 5160624370ee10cf43bc1d178ba469a72ac5f6db
     ],
     imports: [
         BrowserModule,
