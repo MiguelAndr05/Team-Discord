@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-account-creation',
@@ -10,6 +14,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 
 })
 export class AccountCreationComponent implements OnInit {
+  
+  constructor(private http: HttpClient, private router: Router) {}
+  
   userForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
@@ -21,6 +28,16 @@ export class AccountCreationComponent implements OnInit {
 
   ngOnInit() {}
 
+  ngOnInit() {}
+
+  toLogin(){
+    this.router.navigate(["/login"])
+    .then(nav => {
+      console.log(nav);
+    }, err => {
+      console.log("Navigation to /login error: ", err) // when there's an error
+    });
+  }
 
 
   register() {
