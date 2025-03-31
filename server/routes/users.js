@@ -5,11 +5,11 @@ const passport = require('passport');
 const User = require('../models/usersModel');
 
 // Registration Route
-router.post('/register', async (req, res) => {
+router.post('/createAccount', async (req, res) => {
   try {
     const { username, email, phonenumber, password } = req.body;
 
-    if (!username || !email || !phonenumber || !password) {
+    if (!username || !email || !password) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -35,7 +35,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.post('/login', (req, res, next) => {
+router.post('/loginAccount', (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {

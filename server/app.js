@@ -30,7 +30,8 @@ var app = express();
 app.use(cors({
   origin: "http://localhost:4200", // Allow Angular frontend
   methods: "GET,POST,PUT,DELETE,OPTIONS", // Allowed request methods
-  allowedHeaders: "Content-Type,Authorization" // Allowed headers
+  allowedHeaders: "Content-Type,Authorization", // Allowed headers
+  credentials: true,
 }));
 
 // Handle preflight requests (OPTIONS method)
@@ -128,7 +129,7 @@ app.get("/logout", (req, res) => {
 });
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/users", usersRouter);
 
 const PORT = 3000;
 app.listen(PORT, () => {

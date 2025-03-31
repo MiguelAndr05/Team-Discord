@@ -1,60 +1,59 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Component, Inject, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormGroup, FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from '../../api.service';
+import { FormGroup, FormControl, Validators} from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-account-creation',
+  selector: 'app-create-account',
   standalone: false,
   templateUrl: './account-creation.component.html',
-  styleUrls: ['./account-creation.component.css']
-
+  styleUrl: './account-creation.component.css'
 })
 export class AccountCreationComponent implements OnInit {
-  
-  constructor(private http: HttpClient, private router: Router) {}
-  
-  userForm = new FormGroup({
-    username: new FormControl(''),
-    password: new FormControl(''),
-    email: new FormControl(''),
-  });
-  
+  //Display success message when user successfully creates an account
+  successMessage: string = " ";
 
-  constructor(private http: HttpClient) {}
+  //Initialize user form
+  createAccountForm!: FormGroup;
+  //APi constructor
+  constructor(private apiService: ApiService, private router: Router) { 
 
-  ngOnInit() {}
+  };
 
-  ngOnInit() {}
+  ngOnInit(): void {
 
-  toLogin(){
-    this.router.navigate(["/login"])
-    .then(nav => {
-      console.log(nav);
-    }, err => {
-      console.log("Navigation to /login error: ", err) // when there's an error
+    //Initialize this instance of createAccount form
+    this.createAccountForm = new FormGroup({
+      username: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.required),
+      phonenumber: new FormControl(''),
+      password: new FormControl('', Validators.required)
     });
   }
 
-
-  register() {
-    const { username, password, email } = this.userForm.value; // Include email
-    this.http.post('http://localhost:3000/register', { username, password, email })
-      .subscribe({
-        next: () => alert('Registration successful!'),
-        error: (err) => alert('Registration failed: ' + err.message)
-      });
+  onSubmit() {
+    if (this.createAccountForm.valid) {
+      this.apiService.createAccountPost(this.createAccountForm.value).subscribe({
+        next: (res) => {
+          console.log('Created Account: ', res);
+          //Reset fields
+          this.createAccountForm.reset();
+          //Assign success variable to this instance
+          this.successMessage = "Account creation successful, Redirecting to Log in page in 3 seconds";
+          //Set timer
+          setTimeout(() =>{
+          //If successful route to login page
+          this.router.navigate(['/login']);
+          }, 3000);
+        },
+        error: (error) => {
+          console.log("Error: ", error);
+        }
+      })
+      
+    } else {
+      console.log("Form is invalid!");
+    }
   }
 
-  login() {
-    const {username,  email, password } = this.userForm.value; // Use email instead of username
-    this.http.post('http://localhost:3000/login', { username, email, password })
-      .subscribe({
-        next: () => alert('Login successful!'),
-        error: (err) => alert('Login failed: ' + err.message)
-      });
-  }
 }
