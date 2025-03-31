@@ -17,7 +17,6 @@ const usersSchema = new Schema({
     },
     phonenumber: {
         type: String,
-        unique: true,
         default: null
     },
     //Array of objects to store friends list and a friend requests list
