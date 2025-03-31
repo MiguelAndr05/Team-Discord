@@ -8,4 +8,23 @@ import { Component } from '@angular/core';
 })
 export class ProfileComponent {
 
+  //Variable to hold the input text
+  public inputMessage: string = "";
+  //String array to hold messages between users
+  public messageBox: string[] = [];
+  
+  //Method to send message after clicking a button
+  sendMessage(){
+    //Create this instance of inputMessage
+    var userMessage = this.inputMessage;
+
+    if(userMessage){
+      //Push userMessage to messageBox array
+      this.messageBox.push(userMessage);
+      //Clear the input textfield after sending message
+      this.inputMessage = "";
+    }
+
+  }
+
 }
