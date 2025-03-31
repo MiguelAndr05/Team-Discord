@@ -1,19 +1,57 @@
-<!-- Container to hold message box and input text field -->
-<div class="container" style="display: flex; flex-direction: column;">
-    <!-- Container to hold messageBox array -->
-    <div class="message-box border p-3 mb-3" style="height: 200px; overflow-y: auto;">
-        <!-- Create angular for loop to iterate messageBox array and print one message -->
-        <div *ngFor="let message of messageBox">
-            {{message}}
-        </div>
+<!-- Stretch container to full width of the viewport 
+     Assign it to full view height
+     Enable flexbox layout
+ -->
+<div class="container-fluid min-vh-100 d-flex">
+    
+    <div class="Container">
+        
+
     </div>
 
-    <!-- Container to hold input text field and send button -->
-     <div class="input-text">
-        <!-- Bind input text to inputMessage, add a placeholder message -->
-        <input type="text" [(ngModel)]="inputMessage" placeholder="Send a message"/>
-        <!-- Bind button to sendMessage method -->
-        <button (click)="sendMessage()">send</button>
-     </div>
+
+    <!-- Friends list and messaging layout is inside this row -->
+    <!-- Place content of page in layout of a row container 
+         Fill entire height of the row -->
+    <div class="row flex-grow-1">
+        <!-- use 3/12 available columns, add padding and margin -->
+        <div class="friends-list col-md-3 p-3 mb-3">
+            <h6 class="text-center">Friends</h6>
+            <!-- Create list for friends -->
+            <ul class="list-group">
+                <!-- Create angular for loop to iterate friendsList array -->
+                <li *ngFor="let friend of friendsList" class="list-group-item">
+                    {{friend}}
+                </li>
+            </ul>
+        </div>
+        <!-- Use remaining 9/12 columns for the chat box
+             Enable flexbox
+             Assign column layout
+             Add padding-->
+        <div class="messageBox-container col-md-9 d-flex flex-column p-4">
+            
+            <!-- Container to hold messageBox array -->
+            <div class="messageContent-container flex-grow-1 border overflow-auto">
+                <!-- Create angular for loop to iterate messageBox array and print one message -->
+                <div *ngFor="let message of messageBox">
+                    {{message}}
+                </div>
+            </div>
+
+            <!-- Container to hold input text field and send button -->
+            <div class="input-text d-flex">
+                <!-- Bind input text to inputMessage, add a placeholder message -->
+                <input type="text" class="form-control" [(ngModel)]="inputMessage" placeholder="Send a message"/>
+                <!-- Bind button to sendMessage method -->
+                <button class="btn btn-primary" (click)="sendMessage()">send</button>
+            </div>
+        
+        </div>
+
+    </div>
 
 </div>
+
+
+
