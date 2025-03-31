@@ -22,11 +22,11 @@ const usersSchema = new Schema({
     },
     //Array of objects to store friends list and a friend requests list
     friendsList:[{
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: "User"
     }],
     friendRequests: [{
-        type: String, 
+        type: Schema.Types.ObjectId,
         ref: "User"
     }]
 });
