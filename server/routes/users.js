@@ -88,4 +88,53 @@ router.get('/logout', (req, res) => {
   });
 });
 
+//Send Friend request  
+router.post('/sendFriendRequest', async (req,res) => {
+  
+  try{
+    //Extract the receiverUsername and receiverDiscriminator from request body
+    var receiverUsername = req.body.receiverUsername;
+    var receiverDiscriminator = req.body.receiverDiscriminator;
+
+    //Set the authenticated and currently logged in user as the sender
+    //Passport should authenticate and store in user in request
+    var sender = req.user;
+    
+    //MongoDB findOne query to search User collection to match username and discriminator
+    //This will match the compound index in User model
+    var receiver = await User.findOne({
+      
+      username: receiverUsername,
+      discriminator: receiverDiscriminator,
+    });
+
+    //Check if receiver is not found
+    if(!receiver){
+      return res.status(404).json({ error: "User not found"});
+    }
+    //Check is sender is sending it themselves
+    if(receiver._id.equals(sender._id)){
+      return res.status(400).json({ error: "You can't add yourself"});
+    }
+    //Check if the sender has already sent a request
+    if(receiver.friendsList.includes(sender._id)){
+      return res.status(400).json({ error: "You are already friends"});
+    }
+    //Check if they are already friends
+    if(receiver.friendRequests.includes(sender._id)){
+      return res.status(400).json({ error: "User has existing pending friend request"});
+    }
+
+    //User receiver variable to find the receiver's friendRequest field from the model
+    //Push the sender's object id to the receivers friend request list
+    receiver.friendRequests.push(sender._id);
+    //Save to User's friendRequest field
+    await receiver.save();
+
+  }catch(error){
+    console.log(error);
+    return res.status(500).json({ error: "Server error"});
+  }
+});
+
 module.exports = router;
