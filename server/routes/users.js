@@ -35,6 +35,7 @@ router.post('/createAccount', async (req, res) => {
   }
 });
 
+//Currently, req.user will be undefined on initial log in, should be able to identify user on second request
 router.post('/loginAccount', (req, res, next) => {
   const { email, password } = req.body;
 
@@ -54,6 +55,27 @@ router.post('/loginAccount', (req, res, next) => {
     });
   })(req, res, next);
 });
+
+
+//Identify "me" current user
+router.get('/me', (req, res) => {
+  //Debug statements
+  console.log("Session check in /me:", req.session);
+  console.log("Authenticated?", req.isAuthenticated());
+  console.log("User from session:", req.user);
+
+
+  //Check if user is authenticated
+  if(req.isAuthenticated()){
+   
+    res.json(req.user);
+  
+  }else{
+    
+    return res.status(401).json({error: "User is not authenticated"});
+  }
+
+}); 
 
 // Logout Route
 router.get('/logout', (req, res) => {

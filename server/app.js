@@ -49,6 +49,16 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Tracking session info for debugging
+app.use((req, res, next) => {
+  console.log('--- Session Debug ---');
+  console.log('Session ID:', req.sessionID);
+  console.log('Session:', req.session);
+  console.log('User:', req.user);
+  console.log('---------------------');
+  next();
+});
+
 // Passport Local Strategy
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
@@ -80,53 +90,6 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Routes
-app.post("/register", async (req, res) => {
-  const { username, password, email } = req.body;
-
-  // Validate input
-  if (!username || !password || !email) {
-    return res.status(400).json({ message: "Username, password, and email are required" });
-  }
-
-  try {
-    // Check if the user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-
-    // Hash the password
-    const hashedPassword = bcrypt.hashSync(password, 10);
-
-    // Create and save the new user
-    const newUser = new User({
-      username,
-      password: hashedPassword,
-      email
-    });
-
-    await newUser.save();
-    res.status(201).json({ message: "User registered successfully", user: newUser });
-  } catch (err) {
-    console.error("Error saving user to database:", err);
-    res.status(500).json({ message: "Error registering user" });
-  }
-});
-
-app.post("/login", passport.authenticate("local"), (req, res) => {
-  res.json({ message: "Logged in", user: req.user });
-});
-
-app.get("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      console.error("Error during logout:", err);
-      return res.status(500).json({ message: "Error during logout" });
-    }
-    res.json({ message: "Logged out" });
-  });
-});
 
 app.use("/", indexRouter);
 app.use("/api/users", usersRouter);

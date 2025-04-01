@@ -3,9 +3,11 @@
      Enable flexbox layout
  -->
 <div class="container-fluid min-vh-100 d-flex">
+
+    <h2 *ngIf="currentUser">Welcome, {{currentUser.username}}!</h2>
     
     <div class="Container">
-        
+        <button class="btn btn-danger" (click)="logout()">Logout</button>
 
     </div>
 

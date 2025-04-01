@@ -22,12 +22,25 @@ export class ApiService {
         });
     }
 
-     //Post to login to existing user
-     loginAccountPost(accountData: any){
+    //Post to login to existing user
+    loginAccountPost(accountData: any){
         return this.http.post( 'http://localhost:3000/api/users/loginAccount', accountData, {
             withCredentials: true
         });
-        
+    }
+
+    //Get Current user
+    getCurrentUser(){
+        return this.http.get('http://localhost:3000/api/users/me',{
+            withCredentials: true
+        });
+    }
+
+    //Logout of user account
+    logoutUser(){
+        return this.http.get('http://localhost:3000/api/users/logout',{
+            withCredentials: true
+        });
     }
 
 
