@@ -47,6 +47,19 @@
                 </ul>
             </div>
 
+            <div class="border rounded mt-3 p-2">
+                <h6 class="text-center">Add Friend</h6>
+                <div class="input-group">
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    [(ngModel)]="inputFriendRequest" 
+                    placeholder="Enter username#1234"
+                  />
+                  <button class="btn btn-success" (click)="sendFriendRequest()">Add</button>
+                </div>
+              </div>
+
         </div>
 
         
