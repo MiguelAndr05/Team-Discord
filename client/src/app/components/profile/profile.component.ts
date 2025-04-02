@@ -18,10 +18,15 @@ export class ProfileComponent implements OnInit {
   public messageBox: string[] = [];
   //String array to hold friends
   public friendsList: string[] = ["Mario", "Luigi", "Bowser"];
-  //String array to hold friend requests
-  public friendRequest: string[] = [];
   //Store current user
   public currentUser: any = null;
+  
+  public receiverUsername: String = "";
+  public receiverDiscriminator: String = "";
+  public inputFriendRequest: String = "";
+
+  //String array to hold friend requests
+  public friendRequest: String [] = [];
 
   ngOnInit(): void {
       this.api.getCurrentUser().subscribe({
@@ -57,6 +62,44 @@ export class ProfileComponent implements OnInit {
       },
       error: (error) => {
         console.error("Logout failed: ", error);
+      }
+    });
+  }
+
+
+  //Friend Request method
+  sendFriendRequest(){
+
+    if(!this.inputFriendRequest.includes("#")){
+      
+      alert("Please enter a valid username");
+      return;
+    }
+    //Split data at the #
+    var splitFriendRequestData = this.inputFriendRequest.split("#");
+    //Store indecies in separate variables
+    var receiverUsername = splitFriendRequestData[0].trim();
+    var receiverDiscriminator = splitFriendRequestData[1].trim();
+
+    console.log("Sending Friend Request:", { receiverUsername, receiverDiscriminator });
+
+    this.api.sendFriendRequestPost(receiverUsername, receiverDiscriminator).subscribe({
+      
+      next: (res: any) => {
+        if(res.success === false){
+
+          alert(res.message);
+        }else{
+
+          alert("Friend Request sent");
+        
+        }
+        
+        this.inputFriendRequest = "";
+      },
+      error: (error) => {
+        console.error("Failed to send a friend request", error);
+        alert("Failed to send a friend request")
       }
     });
   }

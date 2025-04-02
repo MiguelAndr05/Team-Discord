@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 //Function to generate a discriminator to append to usernames
 function discriminatorGenerator(){
-    return "#" + Math.floor(1000 + Math.random() * 9000).toString();
+    return Math.floor(1000 + Math.random() * 9000).toString();
 }
 
 const usersSchema = new Schema({

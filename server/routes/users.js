@@ -93,12 +93,19 @@ router.post('/sendFriendRequest', async (req,res) => {
   
   try{
     //Extract the receiverUsername and receiverDiscriminator from request body
-    var receiverUsername = req.body.receiverUsername;
-    var receiverDiscriminator = req.body.receiverDiscriminator;
+    var receiverUsername = req.body.receiverUsername.trim();
+    var receiverDiscriminator = req.body.receiverDiscriminator.trim();
 
     //Set the authenticated and currently logged in user as the sender
     //Passport should authenticate and store in user in request
     var sender = req.user;
+
+
+    console.log("Looking for user:", receiverUsername, receiverDiscriminator);
+    if (!sender) {
+      console.log("Sender not authenticated");
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     
     //MongoDB findOne query to search User collection to match username and discriminator
     //This will match the compound index in User model
@@ -112,17 +119,29 @@ router.post('/sendFriendRequest', async (req,res) => {
     if(!receiver){
       return res.status(404).json({ error: "User not found"});
     }
+
+    console.log("Receiver found:", receiver.username, receiver.discriminator);
+    console.log("Receiver's friendRequests:", receiver.friendRequests);
+
     //Check is sender is sending it themselves
     if(receiver._id.equals(sender._id)){
-      return res.status(400).json({ error: "You can't add yourself"});
-    }
-    //Check if the sender has already sent a request
-    if(receiver.friendsList.includes(sender._id)){
-      return res.status(400).json({ error: "You are already friends"});
+      return res.status(200).json({ 
+        success: false,
+        message: "You can't add yourself"});
     }
     //Check if they are already friends
-    if(receiver.friendRequests.includes(sender._id)){
-      return res.status(400).json({ error: "User has existing pending friend request"});
+    if(receiver.friendsList.some(id => id.equals(sender._id))){
+      return res.status(200).json({ 
+        success: false,
+        message: "You are already friends"});
+    }
+    
+    //Check if the sender has already sent a request
+    //Use some() to iterate through object array
+    if(receiver.friendRequests.some(id => id.equals(sender._id))){
+      return res.status(200).json({ 
+         success: false,
+         message: "User has existing pending friend request"});
     }
 
     //User receiver variable to find the receiver's friendRequest field from the model
@@ -130,6 +149,10 @@ router.post('/sendFriendRequest', async (req,res) => {
     receiver.friendRequests.push(sender._id);
     //Save to User's friendRequest field
     await receiver.save();
+    return res.status(202).json({ 
+      success: true,
+      message: "Friend request sent successfully" });
+
 
   }catch(error){
     console.log(error);

@@ -27,6 +27,21 @@
                 </li>
             </ul>
         </div>
+
+        <div class="friend-request-container my-3">
+            <label for="friendRequestInput" class="form-label">Add Friend</label>
+            <div class="d-flex">
+              <input 
+                id="friendRequestInput" 
+                type="text" 
+                class="form-control me-2"
+                [(ngModel)]="inputFriendRequest"
+                placeholder="Enter username#1234"
+              />
+              <button class="btn btn-success" (click)="sendFriendRequest()">Add</button>
+            </div>
+          </div>
+
         <!-- Use remaining 9/12 columns for the chat box
              Enable flexbox
              Assign column layout
