@@ -73,9 +73,11 @@ router.get('/me', async (req, res) => {
   
   var populateUserData = await User.findById(req.user._id)
   //Select desired fields
-  .select("username discriminator friendRequests")
+  .select("username discriminator friendRequests friendList")
   //Use populate to find friendRequests array and grab matching username and discriminator
-  .populate("friendRequests", "username discriminator");
+  .populate("friendRequests", "username discriminator")
+  //Use populate to find friendList array grab matching data and add it to route
+  .populate("friendsList", "username discriminator");
   res.json(populateUserData);
   
   }catch(error){
@@ -166,6 +168,70 @@ router.post('/sendFriendRequest', async (req,res) => {
   }catch(error){
     console.log(error);
     return res.status(500).json({ error: "Server error"});
+  }
+});
+
+//Accept friend request
+router.post('/acceptFriendRequest', async (req, res) => {
+  try{
+    //Store current logged in user id
+    var receiverID = req.user._id;
+    //Request body of the sender 
+    var senderID = req.body.senderID;
+
+    var receiver = await User.findById(receiverID);
+    var sender = await User.findById(senderID);
+
+    //Check for user
+    if(!receiver || !sender){
+      return res.status(404).json({error: "User not found"});
+    }
+
+    //Add each user to the opposite's friends list
+    receiver.friendsList.push(senderID);
+    sender.friendsList.push(receiverID);
+
+    //Filter the array to target id and remove from array
+    receiver.friendRequests = receiver.friendRequests.filter(
+      //Keep all ids that dont match the senderID
+      id => id.toString() !== senderID
+    );
+
+    await receiver.save();
+    await sender.save();
+
+    res.status(200).json({message: "Friend request accepted"});
+
+  }catch(error){
+    console.error("Error to accept friend request: ", error);
+    res.status(500).json({error: "Server Error"})
+  }
+});
+
+//Decline friend request
+router.post('/declineFriendRequest', async (req, res) => {
+  try{
+    
+    var receiverID = req.user._id;
+    var senderID = req.body.senderID;
+
+    var receiver = await User.findById(receiverID);
+
+    if(!receiver){
+      return res.status(404).json({error: "User not found"});
+    }
+    //Filter the array to target id and remove from array
+    receiver.friendRequests = receiver.friendRequests.filter(
+      //Keep all ids that dont match the senderID
+      id => id.toString() !== senderID
+    );
+
+    await receiver.save();
+    res.status(200).json({message: "Friend request declined"});
+
+  }catch(error){
+    console.error("Error to decline friend request: ", error);
+    res.status(500).json({error: "Server Error"});
   }
 });
 

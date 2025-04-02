@@ -104,4 +104,50 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+
+  //Accept Friend Request
+  acceptFriendRequest(senderID: string){
+    this.api.acceptFriendRequestPost(senderID).subscribe({
+      
+      next: (res: any) => {
+
+        alert(res.message);
+        //Update the currentUser object
+        this.api.getCurrentUser().subscribe({
+          next: (user) => {
+            this.currentUser = user;
+          }
+        })
+        
+
+      },
+
+      error: (error) => {
+        console.error("Accept request failed", error);
+      }
+    });
+  }
+
+  //Decline Friend Request
+  declineFriendRequest(senderID: string){
+    this.api.declineFriendRequestPost(senderID).subscribe({
+      
+      next: (res: any) => {
+
+        alert(res.message);
+        //Update the currentUser object
+        this.api.getCurrentUser().subscribe({
+          next: (user) => {
+            this.currentUser = user;
+          }
+        })
+
+      },
+
+      error: (error) => {
+        console.error("Accept request failed", error);
+      }
+    });
+  }
+
 }

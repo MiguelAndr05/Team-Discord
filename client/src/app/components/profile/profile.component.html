@@ -25,8 +25,9 @@
                 <!-- Create list for friends -->
                 <ul class="list-group">
                     <!-- Create angular for loop to iterate friendsList array -->
-                    <li *ngFor="let friend of friendsList" class="list-group-item d-flex justify-content-between align-items-center">
-                        {{friend}}
+                     <!-- Grab friend item in "this" currentUser object's friendList array -->
+                    <li *ngFor="let friend of currentUser.friendsList" class="list-group-item d-flex justify-content-between align-items-center">
+                        {{friend.username}}#{{friend.discriminator}}
                     </li>
                 </ul>
             </div>
@@ -40,8 +41,8 @@
                     {{request.username}}#{{request.discriminator}}
                     <!-- Accept/Decline buttons -->
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-secondary btn-sm">Accept</button>
-                        <button type="button" class="btn btn-secondary btn-sm">Decline</button>
+                        <button type="button" class="btn btn-secondary btn-sm" (click)="acceptFriendRequest(request._id)">Accept</button>
+                        <button type="button" class="btn btn-secondary btn-sm" (click)="declineFriendRequest(request._id)">Decline</button>
                     </div>
                     </li>
                 </ul>

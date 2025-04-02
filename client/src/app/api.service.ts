@@ -59,7 +59,24 @@ export class ApiService {
       },
       {
         withCredentials: true,
-      }
-    );
-  }
+      });
+    }
+
+    //Accept Friend request
+    acceptFriendRequestPost(senderID: string){
+        return this.http.post('http://localhost:3000/api/users/acceptFriendRequest', {
+            senderID,
+        },{
+            withCredentials: true,
+        });
+    }
+
+    //Decline Friend request
+    declineFriendRequestPost(senderID: string){
+        return this.http.post('http://localhost:3000/api/users/declineFriendRequest', {
+            senderID,
+        },{
+            withCredentials: true,
+        });
+    }
 }
