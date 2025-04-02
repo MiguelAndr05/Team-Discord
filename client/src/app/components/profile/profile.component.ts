@@ -17,9 +17,9 @@ export class ProfileComponent implements OnInit {
   //String array to hold messages between users
   public messageBox: string[] = [];
   //String array to hold friends
-  public friendsList: string[] = ["Mario", "Luigi", "Bowser"];
+  public friendsList: string[] = [];
   //Store current user
-  public currentUser: any = null;
+  public currentUser: any = {};
   
   public receiverUsername: String = "";
   public receiverDiscriminator: String = "";

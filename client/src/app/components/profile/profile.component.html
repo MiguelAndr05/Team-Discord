@@ -1,15 +1,17 @@
+
+
 <!-- Stretch container to full width of the viewport 
      Assign it to full view height
      Enable flexbox layout
  -->
 <div class="container-fluid min-vh-100 d-flex">
-
-    <h2 *ngIf="currentUser">Welcome, {{currentUser.username}}!</h2>
     
     <div class="Container">
+        <h2 *ngIf="currentUser">Welcome, {{currentUser.username}}!</h2>
         <button class="btn btn-danger" (click)="logout()">Logout</button>
 
     </div>
+
 
 
     <!-- Friends list and messaging layout is inside this row -->
@@ -18,29 +20,37 @@
     <div class="row flex-grow-1">
         <!-- use 3/12 available columns, add padding and margin -->
         <div class="friends-list col-md-3 p-3 mb-3">
-            <h6 class="text-center">Friends</h6>
-            <!-- Create list for friends -->
-            <ul class="list-group">
-                <!-- Create angular for loop to iterate friendsList array -->
-                <li *ngFor="let friend of friendsList" class="list-group-item">
-                    {{friend}}
-                </li>
-            </ul>
+            <div class="border rounded">
+                <h6 class="text-center">Friends</h6>
+                <!-- Create list for friends -->
+                <ul class="list-group">
+                    <!-- Create angular for loop to iterate friendsList array -->
+                    <li *ngFor="let friend of friendsList" class="list-group-item d-flex justify-content-between align-items-center">
+                        {{friend}}
+                    </li>
+                </ul>
+            </div>
+
+            
+            <!-- Friend Request -->
+            <div class=" border rounded mt-3">
+                <h6 class="text-center">Friend Requests</h6>
+                <ul class="list-group">
+                    <li *ngFor="let request of currentUser.friendRequests" class="list-group-item d-flex justify-content-between align-items-center">
+                    {{request.username}}#{{request.discriminator}}
+                    <!-- Accept/Decline buttons -->
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-secondary btn-sm">Accept</button>
+                        <button type="button" class="btn btn-secondary btn-sm">Decline</button>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+
         </div>
 
-        <div class="friend-request-container my-3">
-            <label for="friendRequestInput" class="form-label">Add Friend</label>
-            <div class="d-flex">
-              <input 
-                id="friendRequestInput" 
-                type="text" 
-                class="form-control me-2"
-                [(ngModel)]="inputFriendRequest"
-                placeholder="Enter username#1234"
-              />
-              <button class="btn btn-success" (click)="sendFriendRequest()">Add</button>
-            </div>
-          </div>
+        
+
 
         <!-- Use remaining 9/12 columns for the chat box
              Enable flexbox
