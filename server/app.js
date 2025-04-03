@@ -37,19 +37,36 @@ const io = new Server(httpServer, {
   },
 });
 
+const connectedUsers = {}; // Store connected users with their names
+
 // Handle Socket.IO connections
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
+  // Handle user registration
+  socket.on("register-user", (data) => {
+    const { name } = data;
+    connectedUsers[socket.id] = name; // Associate the user's name with their socket ID
+    console.log(`User registered: ${name} (Socket ID: ${socket.id})`);
+  });
+
   // Handle incoming messages
   socket.on("message", (data) => {
-    console.log("Message received from client:", data);
-    io.emit("message", data); // Broadcast the message to all connected clients
+    const senderName = connectedUsers[socket.id] || "Unknown User"; // Get the sender's name
+    console.log(`Message from ${senderName}:`, data.text);
+
+    // Broadcast the message with the sender's name
+    io.emit("message", {
+      text: data.text,
+      senderName,
+      timestamp: new Date().toISOString(),
+    });
   });
 
   // Handle disconnection
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
+    delete connectedUsers[socket.id]; // Remove the user from the connected users list
   });
 });
 

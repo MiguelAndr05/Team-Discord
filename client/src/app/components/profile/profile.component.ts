@@ -33,16 +33,28 @@ export class ProfileComponent implements OnInit {
   public friendRequest: string[] = [];
 
   ngOnInit(): void {
-    // Fetch the current user
-    this.api.getCurrentUser().subscribe({
-      next: (user) => {
-        console.log('Logged in as: ', user);
-        this.currentUser = user;
-      },
-      error: (error) => {
-        console.error('Could not find user: ', error);
-      },
-    });
+      // Fetch the current user
+      this.api.getCurrentUser().subscribe({
+        next: (user) => {
+          console.log('Logged in as: ', user);
+          this.currentUser = user;
+          console.log(user);
+
+          
+           // Emit the logged-in user's name to the server
+          // this.socketService.emit('register-user', {
+          //   name: user.username,
+          //   id: id._id // Replace with the correct property
+          // });
+
+          // Emit the logged-in user's name to the server
+         
+        
+        },
+        error: (error) => {
+          console.error('Could not find user: ', error);
+        },
+      });
 
     this.socketService.on('message', (data: any) => {
       console.log('Message received from server:', data);
