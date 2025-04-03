@@ -13,7 +13,8 @@ require('./configs/passport'); // Ensure Passport configuration is loaded
 var configs = require("./configs/globals");
 var mongoose = require("mongoose");
 var User = require("./models/usersModel"); // Import the User model
-const Server  = require('socket.io');
+var { createServer } = require("http");
+var { Server } = require("socket.io");
 
 // Connect to MongoDB
 mongoose
@@ -50,7 +51,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Tracking session info for debugging
+// Tracking session info for debugging
 app.use((req, res, next) => {
   console.log('--- Session Debug ---');
   console.log('Session ID:', req.sessionID);
@@ -58,13 +59,6 @@ app.use((req, res, next) => {
   console.log('User:', req.user);
   console.log('---------------------');
   next();
-});
-
-
-const io = new Server(server)
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
 });
 
 // Passport Local Strategy
@@ -98,15 +92,33 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-
+// Routes
 app.use("/", indexRouter);
 app.use("/api/users", usersRouter);
 
+// Create HTTP Server and Attach Socket.IO
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:4200", // Replace with your frontend URL
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+// Socket.IO Connection
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected:", socket.id);
+  });
+});
+
+// Start the Server
 const PORT = 3000;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
-
-
