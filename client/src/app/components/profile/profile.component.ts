@@ -40,16 +40,12 @@ export class ProfileComponent implements OnInit {
           this.currentUser = user;
           console.log(user);
 
-          
-           // Emit the logged-in user's name to the server
+          // // Emit the logged-in user's name to the server
           // this.socketService.emit('register-user', {
           //   name: user.username,
           //   id: id._id // Replace with the correct property
           // });
 
-          // Emit the logged-in user's name to the server
-         
-        
         },
         error: (error) => {
           console.error('Could not find user: ', error);
@@ -76,7 +72,7 @@ export class ProfileComponent implements OnInit {
       this.socketService.emit('message', { text: userMessage });
 
      
-      this.messageBox.push(userMessage);
+      this.messageBox.push();
 
      
       this.inputMessage = '';
