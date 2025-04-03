@@ -1,153 +1,151 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { Router } from '@angular/router';
-import { using } from 'rxjs';
+import { SocketService } from '../../socket.service'; // Import SocketService
 
 @Component({
   selector: 'app-profile',
   standalone: false,
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
-  constructor(private api: ApiService, private router: Router){}
+  constructor(
+    private api: ApiService,
+    private router: Router,
+    private socketService: SocketService // Inject SocketService
+  ) {}
 
-  //Variable to hold the input text
-  public inputMessage: string = "";
-  //String array to hold messages between users
+  // Variable to hold the input text
+  public inputMessage: string = '';
+  // String array to hold messages between users
   public messageBox: string[] = [];
-  //String array to hold friends
+  // String array to hold friends
   public friendsList: string[] = [];
-  //Store current user
+  // Store current user
   public currentUser: any = {};
-  
-  public receiverUsername: String = "";
-  public receiverDiscriminator: String = "";
-  public inputFriendRequest: String = "";
 
-  //String array to hold friend requests
-  public friendRequest: String [] = [];
+  public receiverUsername: string = '';
+  public receiverDiscriminator: string = '';
+  public inputFriendRequest: string = '';
+
+  // String array to hold friend requests
+  public friendRequest: string[] = [];
 
   ngOnInit(): void {
-      this.api.getCurrentUser().subscribe({
-        next: (user) => {
-          console.log("Logged in as: ", user);
-          this.currentUser = user;
-        },
-        error: (error) => {
-          console.error("Could not find user: ", error);
-        }
-      });
-  }
-  
-  //Method to send message after clicking a button
-  sendMessage(){
-    //Create this instance of inputMessage
-    var userMessage = this.inputMessage;
+    // Fetch the current user
+    this.api.getCurrentUser().subscribe({
+      next: (user) => {
+        console.log('Logged in as: ', user);
+        this.currentUser = user;
+      },
+      error: (error) => {
+        console.error('Could not find user: ', error);
+      },
+    });
 
-    if(userMessage){
-      //Push userMessage to messageBox array
+    this.socketService.on('message', (data: any) => {
+      console.log('Message received from server:', data);
+      this.messageBox.push(data.text); 
+    });
+
+    this.socketService.on('friend-request', (data: any) => {
+      console.log('Friend request received:', data);
+      alert(`Friend request received from ${data.senderUsername}`);
+    });
+  }
+
+  
+  sendMessage() {
+    const userMessage = this.inputMessage;
+
+    if (userMessage) {
+      
+      this.socketService.emit('message', { text: userMessage });
+
+     
       this.messageBox.push(userMessage);
-      //Clear the input textfield after sending message
-      this.inputMessage = "";
+
+     
+      this.inputMessage = '';
     }
   }
 
-  //Logout Method
-  logout(){
+  // Logout Method
+  logout() {
     this.api.logoutUser().subscribe({
       next: (res) => {
-        console.log("Logged out of user: ", res);
+        console.log('Logged out of user: ', res);
         this.router.navigate(['/login']);
       },
       error: (error) => {
-        console.error("Logout failed: ", error);
-      }
+        console.error('Logout failed: ', error);
+      },
     });
   }
 
-
-  //Friend Request method
-  sendFriendRequest(){
-
-    if(!this.inputFriendRequest.includes("#")){
-      
-      alert("Please enter a valid username");
+ 
+  sendFriendRequest() {
+    if (!this.inputFriendRequest.includes('#')) {
+      alert('Please enter a valid username');
       return;
     }
-    //Split data at the #
-    var splitFriendRequestData = this.inputFriendRequest.split("#");
-    //Store indecies in separate variables
-    var receiverUsername = splitFriendRequestData[0].trim();
-    var receiverDiscriminator = splitFriendRequestData[1].trim();
+    // Split data at the #
+    const splitFriendRequestData = this.inputFriendRequest.split('#');
+    const receiverUsername = splitFriendRequestData[0].trim();
+    const receiverDiscriminator = splitFriendRequestData[1].trim();
 
-    console.log("Sending Friend Request:", { receiverUsername, receiverDiscriminator });
+    console.log('Sending Friend Request:', { receiverUsername, receiverDiscriminator });
 
     this.api.sendFriendRequestPost(receiverUsername, receiverDiscriminator).subscribe({
-      
       next: (res: any) => {
-        if(res.success === false){
-
+        if (res.success === false) {
           alert(res.message);
-        }else{
-
-          alert("Friend Request sent");
-        
+        } else {
+          alert('Friend Request sent');
         }
-        
-        this.inputFriendRequest = "";
+        this.inputFriendRequest = '';
       },
       error: (error) => {
-        console.error("Failed to send a friend request", error);
-        alert("Failed to send a friend request")
-      }
+        console.error('Failed to send a friend request', error);
+        alert('Failed to send a friend request');
+      },
     });
   }
 
-
-  //Accept Friend Request
-  acceptFriendRequest(senderID: string){
+  // Accept Friend Request
+  acceptFriendRequest(senderID: string) {
     this.api.acceptFriendRequestPost(senderID).subscribe({
-      
       next: (res: any) => {
-
         alert(res.message);
-        //Update the currentUser object
+        // Update the currentUser object
         this.api.getCurrentUser().subscribe({
           next: (user) => {
             this.currentUser = user;
-          }
-        })
-        
-
+          },
+        });
       },
-
       error: (error) => {
-        console.error("Accept request failed", error);
-      }
+        console.error('Accept request failed', error);
+      },
     });
   }
 
-  //Decline Friend Request
-  declineFriendRequest(senderID: string){
+  // Decline Friend Request
+  declineFriendRequest(senderID: string) {
     this.api.declineFriendRequestPost(senderID).subscribe({
-      
       next: (res: any) => {
-
         alert(res.message);
-        //Update the currentUser object
+        // Update the currentUser object
         this.api.getCurrentUser().subscribe({
           next: (user) => {
             this.currentUser = user;
-          }
-        })
-
+          },
+        });
       },
-
       error: (error) => {
-        console.error("Accept request failed", error);
-      }
+        console.error('Decline request failed', error);
+      },
     });
   }
-
 }

@@ -15,7 +15,6 @@ var mongoose = require("mongoose");
 var User = require("./models/usersModel"); // Import the User model
 var { createServer } = require("http");
 var { Server } = require("socket.io");
-
 // Connect to MongoDB
 mongoose
   .connect(configs.ConnectionString.MongoDB)
@@ -27,6 +26,37 @@ mongoose
   });
 
 var app = express();
+
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:4200", // Replace with your frontend URL
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+// Handle Socket.IO connections
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+
+  // Handle incoming messages
+  socket.on("message", (data) => {
+    console.log("Message received from client:", data);
+    io.emit("message", data); // Broadcast the message to all connected clients
+  });
+
+  // Handle disconnection
+  socket.on("disconnect", () => {
+    console.log("A user disconnected:", socket.id);
+  });
+});
+
+const PORT = 3000;
+httpServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 // CORS Middleware (Explicit Configuration)
 app.use(cors({
@@ -51,7 +81,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Tracking session info for debugging
+//Tracking session info for debugging
 app.use((req, res, next) => {
   console.log('--- Session Debug ---');
   console.log('Session ID:', req.sessionID);
@@ -92,33 +122,9 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Routes
+
 app.use("/", indexRouter);
 app.use("/api/users", usersRouter);
 
-// Create HTTP Server and Attach Socket.IO
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:4200", // Replace with your frontend URL
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-
-// Socket.IO Connection
-io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("A user disconnected:", socket.id);
-  });
-});
-
-// Start the Server
-const PORT = 3000;
-httpServer.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
 
 module.exports = app;
