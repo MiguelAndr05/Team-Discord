@@ -5,11 +5,11 @@ const passport = require('passport');
 const User = require('../models/usersModel');
 
 // Registration Route
-router.post('/register', async (req, res) => {
+router.post('/createAccount', async (req, res) => {
   try {
     const { username, email, phonenumber, password } = req.body;
 
-    if (!username || !email || !phonenumber || !password) {
+    if (!username || !email || !password) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -35,7 +35,8 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.post('/login', (req, res, next) => {
+//Currently, req.user will be undefined on initial log in, should be able to identify user on second request
+router.post('/loginAccount', (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -55,6 +56,38 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
+
+//Identify "me" current user
+router.get('/me', async (req, res) => {
+  //Debug statements
+  console.log("Session check in /me:", req.session);
+  console.log("Authenticated?", req.isAuthenticated());
+  console.log("User from session:", req.user);
+
+  try{
+
+  //Check if user is authenticated
+  if(!req.isAuthenticated()){
+    return res.status(401).json({error: "User is not authenticated"})
+  }
+  
+  var populateUserData = await User.findById(req.user._id)
+  //Select desired fields
+  .select("username discriminator friendRequests friendList")
+  //Use populate to find friendRequests array and grab matching username and discriminator
+  .populate("friendRequests", "username discriminator")
+  //Use populate to find friendList array grab matching data and add it to route
+  .populate("friendsList", "username discriminator");
+  res.json(populateUserData);
+  
+  }catch(error){
+    console.error("Error in /me route: ", error);
+    res.status(500).json({error: "Server error"});
+  }
+  
+
+}); 
+
 // Logout Route
 router.get('/logout', (req, res) => {
   req.logout((err) => {
@@ -64,6 +97,142 @@ router.get('/logout', (req, res) => {
     }
     res.json({ message: 'Logout successful' });
   });
+});
+
+//Send Friend request  
+router.post('/sendFriendRequest', async (req,res) => {
+  
+  try{
+    //Extract the receiverUsername and receiverDiscriminator from request body
+    var receiverUsername = req.body.receiverUsername.trim();
+    var receiverDiscriminator = req.body.receiverDiscriminator.trim();
+
+    //Set the authenticated and currently logged in user as the sender
+    //Passport should authenticate and store in user in request
+    var sender = req.user;
+
+
+    console.log("Looking for user:", receiverUsername, receiverDiscriminator);
+    if (!sender) {
+      console.log("Sender not authenticated");
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    //MongoDB findOne query to search User collection to match username and discriminator
+    //This will match the compound index in User model
+    var receiver = await User.findOne({
+      
+      username: receiverUsername,
+      discriminator: receiverDiscriminator,
+    });
+
+    //Check if receiver is not found
+    if(!receiver){
+      return res.status(404).json({ error: "User not found"});
+    }
+
+    console.log("Receiver found:", receiver.username, receiver.discriminator);
+    console.log("Receiver's friendRequests:", receiver.friendRequests);
+
+    //Check is sender is sending it themselves
+    if(receiver._id.equals(sender._id)){
+      return res.status(200).json({ 
+        success: false,
+        message: "You can't add yourself"});
+    }
+    //Check if they are already friends
+    if(receiver.friendsList.some(id => id.equals(sender._id))){
+      return res.status(200).json({ 
+        success: false,
+        message: "You are already friends"});
+    }
+    
+    //Check if the sender has already sent a request
+    //Use some() to iterate through object array
+    if(receiver.friendRequests.some(id => id.equals(sender._id))){
+      return res.status(200).json({ 
+         success: false,
+         message: "User has existing pending friend request"});
+    }
+
+    //User receiver variable to find the receiver's friendRequest field from the model
+    //Push the sender's object id to the receivers friend request list
+    receiver.friendRequests.push(sender._id);
+    //Save to User's friendRequest field
+    await receiver.save();
+    return res.status(202).json({ 
+      success: true,
+      message: "Friend request sent successfully" });
+
+
+  }catch(error){
+    console.log(error);
+    return res.status(500).json({ error: "Server error"});
+  }
+});
+
+//Accept friend request
+router.post('/acceptFriendRequest', async (req, res) => {
+  try{
+    //Store current logged in user id
+    var receiverID = req.user._id;
+    //Request body of the sender 
+    var senderID = req.body.senderID;
+
+    var receiver = await User.findById(receiverID);
+    var sender = await User.findById(senderID);
+
+    //Check for user
+    if(!receiver || !sender){
+      return res.status(404).json({error: "User not found"});
+    }
+
+    //Add each user to the opposite's friends list
+    receiver.friendsList.push(senderID);
+    sender.friendsList.push(receiverID);
+
+    //Filter the array to target id and remove from array
+    receiver.friendRequests = receiver.friendRequests.filter(
+      //Keep all ids that dont match the senderID
+      id => id.toString() !== senderID
+    );
+
+    await receiver.save();
+    await sender.save();
+
+    res.status(200).json({message: "Friend request accepted"});
+
+  }catch(error){
+    console.error("Error to accept friend request: ", error);
+    res.status(500).json({error: "Server Error"})
+  }
+});
+
+//Decline friend request
+router.post('/declineFriendRequest', async (req, res) => {
+  try{
+    
+    var receiverID = req.user._id;
+    var senderID = req.body.senderID;
+
+    var receiver = await User.findById(receiverID);
+
+    if(!receiver){
+      return res.status(404).json({error: "User not found"});
+    }
+    //Filter the array to target id and remove from array
+    receiver.friendRequests = receiver.friendRequests.filter(
+      //Keep all ids that dont match the senderID
+      id => id.toString() !== senderID
+    );
+
+    await receiver.save();
+    res.status(200).json({message: "Friend request declined"});
+
+  }catch(error){
+    console.error("Error to decline friend request: ", error);
+    res.status(500).json({error: "Server Error"});
+  }
 });
 
 module.exports = router;

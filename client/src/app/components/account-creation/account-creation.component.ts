@@ -4,14 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
 
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { ApiService } from '../../api.service';
 
 @Component({
-  selector: 'app-account-creation',
+  selector: 'app-create-account',
   standalone: false,
   templateUrl: './account-creation.component.html',
-  styleUrls: ['./account-creation.component.css']
-
+  styleUrl: './account-creation.component.css'
 })
 export class AccountCreationComponent implements OnInit {
 
@@ -25,8 +24,9 @@ export class AccountCreationComponent implements OnInit {
   });
   
 
-  ngOnInit() {}
+  };
 
+<<<<<<< HEAD
 
   register() {
     const { username, password, email } = this.userForm.value; // Include email
@@ -47,4 +47,42 @@ export class AccountCreationComponent implements OnInit {
       });
   }
 
+=======
+  ngOnInit(): void {
+
+    //Initialize this instance of createAccount form
+    this.createAccountForm = new FormGroup({
+      username: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.required),
+      phonenumber: new FormControl(''),
+      password: new FormControl('', Validators.required)
+    });
+  }
+
+  onSubmit() {
+    if (this.createAccountForm.valid) {
+      this.apiService.createAccountPost(this.createAccountForm.value).subscribe({
+        next: (res) => {
+          console.log('Created Account: ', res);
+          //Reset fields
+          this.createAccountForm.reset();
+          //Assign success variable to this instance
+          this.successMessage = "Account creation successful, Redirecting to Log in page in 3 seconds";
+          //Set timer
+          setTimeout(() =>{
+          //If successful route to login page
+          this.router.navigate(['/login']);
+          }, 3000);
+        },
+        error: (error) => {
+          console.log("Error: ", error);
+        }
+      })
+      
+    } else {
+      console.log("Form is invalid!");
+    }
+  }
+
+>>>>>>> 195735727c9c031afdc8bc73d3bb6f53173f117b
 }

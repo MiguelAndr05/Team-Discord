@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="navbar">
   <div class="navbar-brand">Team Discord</div>
   <div class="navbar-links">
@@ -46,13 +47,35 @@
         <label for="password">Password:</label>
         <input id="password" type="password" formControlName="password" placeholder="Enter your password" required />
       </div>
+=======
+<!-- Create account formgroup -->
+<div class="createAccount-container">
+  <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+>>>>>>> 195735727c9c031afdc8bc73d3bb6f53173f117b
       
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input id="email" formControlName="email" placeholder="Enter your email" required />
+      <label>User Name</label>
+      <input type="text" name="username" id="username" formControlName="username" required />
+      
+      <label>Email</label>
+      <input type="text" name="email" id="create-email" formControlName="email" required />
+      
+      <label>Phone Number</label>
+      <input type="text" name="phonenumber" id="phonenumber" formControlName="phonenumber" />
+      
+      <label>Password</label>
+      <input type="text" name="password" id="create-password" formControlName="password" required />
+      
+      <button type="submit">Create Account</button>
+
+      <div *ngIf="successMessage" class="success-message">
+          <strong>{{successMessage}}</strong>
       </div>
 
+<<<<<<< HEAD
       <button type="submit" class="btn btn-secondary">Login</button>
     </form>
   </div>
+=======
+  </form>
+>>>>>>> 195735727c9c031afdc8bc73d3bb6f53173f117b
 </div>
