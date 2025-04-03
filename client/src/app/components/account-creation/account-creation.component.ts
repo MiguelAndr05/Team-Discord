@@ -1,10 +1,7 @@
-
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormGroup, FormControl } from '@angular/forms';
-
-import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../api.service';
+import { FormGroup, FormControl, Validators} from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-account',
@@ -13,41 +10,16 @@ import { ApiService } from '../../api.service';
   styleUrl: './account-creation.component.css'
 })
 export class AccountCreationComponent implements OnInit {
+  //Display success message when user successfully creates an account
+  successMessage: string = " ";
 
-  
-  constructor(private http: HttpClient, private router: Router) {}
-
-  userForm = new FormGroup({
-    username: new FormControl(''),
-    password: new FormControl(''),
-    email: new FormControl(''),
-  });
-  
+  //Initialize user form
+  createAccountForm!: FormGroup;
+  //APi constructor
+  constructor(private apiService: ApiService, private router: Router) { 
 
   };
 
-<<<<<<< HEAD
-
-  register() {
-    const { username, password, email } = this.userForm.value; // Include email
-    this.http.post('http://localhost:3000/register', { username, password, email })
-      .subscribe({
-        next: () => alert('Registration successful!'),
-        error: (err) => alert('Registration failed: ' + err.message)
-      });
-  }
-
-
-  login() {
-    const {username,  email, password } = this.userForm.value; // Use email instead of username
-    this.http.post('http://localhost:3000/login', { username, email, password })
-      .subscribe({
-        next: () => alert('Login successful!'),
-        error: (err) => alert('Login failed: ' + err.message)
-      });
-  }
-
-=======
   ngOnInit(): void {
 
     //Initialize this instance of createAccount form
@@ -84,5 +56,4 @@ export class AccountCreationComponent implements OnInit {
     }
   }
 
->>>>>>> 195735727c9c031afdc8bc73d3bb6f53173f117b
 }

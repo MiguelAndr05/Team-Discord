@@ -5,18 +5,16 @@ import { AppComponent } from './app.component';
 import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'; 
 import { AccountCreationComponent } from './components/account-creation/account-creation.component';
-
+import { ProfileComponent } from './components/profile/profile.component';
 import { LoginComponent } from './components/login/login.component';
-
 
 @NgModule({
     declarations: [
         AppComponent,
-        AccountCreationComponent, // Declare the component here
         //HomeComponent,
         //FriendListComponent,
         AccountCreationComponent,
-   
+        ProfileComponent, // Declare the component here
         LoginComponent, // Declare the component here
     ],
     imports: [

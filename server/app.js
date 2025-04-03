@@ -13,6 +13,7 @@ require('./configs/passport'); // Ensure Passport configuration is loaded
 var configs = require("./configs/globals");
 var mongoose = require("mongoose");
 var User = require("./models/usersModel"); // Import the User model
+const Server  = require('socket.io');
 
 // Connect to MongoDB
 mongoose
@@ -57,6 +58,13 @@ app.use((req, res, next) => {
   console.log('User:', req.user);
   console.log('---------------------');
   next();
+});
+
+
+const io = new Server(server)
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
 });
 
 // Passport Local Strategy
