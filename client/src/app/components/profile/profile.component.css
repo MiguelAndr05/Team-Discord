@@ -1,0 +1,82 @@
+/* acts as body of page */
+main{
+    background-color: rgb(190, 225, 255);
+}
+/* display welcome message with username */
+.title{
+    text-align: center;
+    background-color: rgb(145, 190, 238);
+    border-radius: 2rem 2rem;
+    color: rgb(42, 135, 189);
+    text-shadow: 0.1rem 0.1rem rgba(2, 127, 199, 0.596);
+
+}
+/* common look for all h6 elements; friends list, requests and add friends */
+h6{
+    color: rgb(33, 106, 155);
+    text-shadow: 0.05rem 0.05rem rgba(2, 127, 199, 0.596);
+
+}
+/* 3/12 available columns, left side elements */
+.friends-list{
+    background-color: rgb(165, 199, 235);
+    border-radius: 2rem 2rem;
+}
+/* used for backgrounds for friends list, requests and their individual items */
+.tab{
+    background-color: rgb(205, 232, 255);
+    color: rgb(39, 125, 182);
+    font-weight: 400;
+    border-bottom: 0.1 solid rgb(126, 195, 255);
+}
+/* used for borders of friends list and requests. The whole list of both */
+
+.tablist{
+    border: 0.1rem solid rgb(126, 195, 255);
+}
+/* 9/12 of available column, right side used for messages */
+
+.messagetab{
+    background-color: rgb(117, 159, 204);
+    border-radius: 2rem 2rem;
+}
+/* displayed messages as written by users */
+
+.messagesBox{
+    border: 2rem solid rgb(75, 122, 163);
+    border-radius: 1rem 1rem;
+    padding: 0.2rem;
+}
+/* individual messages spaced out and bolded slight for readability */
+
+.message{
+    padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+    color: rgb(32, 99, 145);
+    font-weight: 500;
+
+}
+/* messages textbox rounding and colouring */
+
+.textbox{
+    background-color: rgb(92, 128, 194);;
+    border: 0.2rem solid rgb(75, 122, 163);
+    border-radius: 3rem 3rem;
+
+}
+/* curves each button to make edges less rough */
+
+.curved{
+    border-radius: 3rem 3rem;
+}
+/* friend request textbox colouring and curving */
+
+.friend-textbox{
+    background-color: rgb(153, 199, 226);
+    border-radius: 3rem 3rem;
+}
+/* makes left and right side appear more connected with a border */
+
+.connected{
+    border: 0.2rem solid rgb(106, 185, 253);
+    border-radius: 2rem 2rem;
+}

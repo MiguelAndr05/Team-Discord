@@ -1,98 +1,116 @@
-
-
 <!-- Stretch container to full width of the viewport 
      Assign it to full view height
      Enable flexbox layout
  -->
-<div class="container-fluid min-vh-100 d-flex">
-    
-    <div class="Container">
+<!-- ISAIAH: moved title div outside of normal flow, added custom class title and curved to button
+-->
+<main>
+    <div class="container-fluid shadow py-3 title">
         <h2 *ngIf="currentUser">Welcome, {{currentUser.username}}!</h2>
-        <button class="btn btn-danger" (click)="logout()">Logout</button>
-
+        <button class="btn btn-danger curved" (click)="logout()">Logout</button>
     </div>
+    <!-- ISAIAH: custom class added connected -->
+    <div class="container-fluid min-vh-100 d-flex connected">
 
 
 
-    <!-- Friends list and messaging layout is inside this row -->
-    <!-- Place content of page in layout of a row container 
+        <!-- Friends list and messaging layout is inside this row -->
+        <!-- Place content of page in layout of a row container 
          Fill entire height of the row -->
-    <div class="row flex-grow-1">
-        <!-- use 3/12 available columns, add padding and margin -->
-        <div class="friends-list col-md-3 p-3 mb-3">
-            <div class="border rounded">
-                <h6 class="text-center">Friends</h6>
-                <!-- Create list for friends -->
-                <ul class="list-group">
-                    <!-- Create angular for loop to iterate friendsList array -->
-                     <!-- Grab friend item in "this" currentUser object's friendList array -->
-                    <li *ngFor="let friend of currentUser.friendsList" class="list-group-item d-flex justify-content-between align-items-center">
-                        {{friend.username}}#{{friend.discriminator}}
-                    </li>
-                </ul>
-            </div>
+        <div class="row flex-grow-1">
 
-            
-            <!-- Friend Request -->
-            <div class=" border rounded mt-3">
-                <h6 class="text-center">Friend Requests</h6>
-                <ul class="list-group">
-                    <li *ngFor="let request of currentUser.friendRequests" class="list-group-item d-flex justify-content-between align-items-center">
-                    {{request.username}}#{{request.discriminator}}
-                    <!-- Accept/Decline buttons -->
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-secondary btn-sm" (click)="acceptFriendRequest(request._id)">Accept</button>
-                        <button type="button" class="btn btn-secondary btn-sm" (click)="declineFriendRequest(request._id)">Decline</button>
+            <!-- use 3/12 available columns, add padding and margin -->
+            <div class="friends-list col-md-3 p-3">
+                <!-- ISAIAH: custom class added tab -->
+                <div class="border rounded tab">
+                    <h6 class="text-center">Friends</h6>
+                    <!-- Create list for friends -->
+                    <!-- ISAIAH: custom class added tablist -->
+                    <ul class="list-group tablist">
+                        <!-- Create angular for loop to iterate friendsList array -->
+                        <!-- Grab friend item in "this" currentUser object's friendList array -->
+                        <!-- ISAIAH: custom class added tab -->
+                        <li *ngFor="let friend of currentUser.friendsList"
+                            class="list-group-item d-flex justify-content-between align-items-center tab">
+                            {{friend.username}}#{{friend.discriminator}}
+                        </li>
+                    </ul>
+                </div>
+
+
+                <!-- Friend Request -->
+                <!-- ISAIAH: custom class added tab -->
+                <div class=" border rounded mt-3 tab">
+                    <h6 class="text-center">Friend Requests</h6>
+                    <!-- ISAIAH: custom class added tablist -->
+                    <ul class="list-group tablist">
+                        <!-- ISAIAH: custom class added tab -->
+                        <li *ngFor="let request of currentUser.friendRequests"
+                            class="list-group-item d-flex justify-content-between align-items-center tab">
+                            {{request.username}}#{{request.discriminator}}
+                            <!-- Accept/Decline buttons -->
+                            <div class="btn-group" role="group">
+                                <!-- ISAIAH: custom class added curved -->
+                                <button type="button" class="btn btn-secondary btn-sm curved"
+                                    (click)="acceptFriendRequest(request._id)">Accept</button>
+                                &nbsp;
+                                <button type="button" class="btn btn-secondary btn-sm curved"
+                                    (click)="declineFriendRequest(request._id)">Decline</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- ISAIAH: custom class added tab -->
+                <div class="border rounded mt-3 p-2 tab">
+                    <h6 class="text-center">Add Friend</h6>
+                    <div class="input-group">
+                        <!-- ISAIAH: custom class added friend-textbox and curved to button 
+                             put input and button in input-group to appear as a merged element-->
+                        <input type="text" class="form-control friend-textbox" [(ngModel)]="inputFriendRequest"
+                            placeholder="Enter username#1234" />
+                        <button class="btn btn-success curved" (click)="sendFriendRequest()">Add</button>
                     </div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="border rounded mt-3 p-2">
-                <h6 class="text-center">Add Friend</h6>
-                <div class="input-group">
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    [(ngModel)]="inputFriendRequest" 
-                    placeholder="Enter username#1234"
-                  />
-                  <button class="btn btn-success" (click)="sendFriendRequest()">Add</button>
                 </div>
-              </div>
 
-        </div>
-
-        
+            </div>
 
 
-        <!-- Use remaining 9/12 columns for the chat box
-             Enable flexbox
-             Assign column layout
-             Add padding-->
-        <div class="messageBox-container col-md-9 d-flex flex-column p-4">
-            
-            <!-- Container to hold messageBox array -->
-            <div class="messageContent-container flex-grow-1 border overflow-auto">
-                <!-- Create angular for loop to iterate messageBox array and print one message -->
-                <div *ngFor="let message of messageBox">
-                    {{message}}
+
+
+            <!-- Use remaining 9/12 columns for the chat box
+                 Enable flexbox
+                 Assign column layout
+                 Add padding-->
+            <!-- Changed to p-3 from p-4, lowered padding to match other rows -->
+            <!-- ISAIAH: custom class added messagetab -->
+            <div class="messageBox-container col-md-9 d-flex flex-column p-3 messagetab">
+
+                <!-- Container to hold messageBox array -->
+                <!-- ISAIAH: custom class added messagesBox -->
+                <div class="messageContent-container flex-grow-1 border overflow-auto message messagesBox">
+                    <!-- Create angular for loop to iterate messageBox array and print one message -->
+                    <!-- ISAIAH: custom class added message -->
+                    <div *ngFor="let message of messageBox" class="message">
+                        {{message}}
+                    </div>
                 </div>
+
+                <!-- Container to hold input text field and send button -->
+                <div class="input-text d-flex pt-1">
+                    <!-- Bind input text to inputMessage, add a placeholder message -->
+                    <div class="input-group">
+                        <!-- ISAIAH: custom class added textbox and curved to button 
+                             put input and button in input-group to appear as a merged element-->
+                        <input type="text" class="form-control textbox" [(ngModel)]="inputMessage"
+                            placeholder="Send a message" />
+                        <!-- Bind button to sendMessage method -->
+                        <button class="btn btn-primary curved" (click)="sendMessage()">Send</button>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- Container to hold input text field and send button -->
-            <div class="input-text d-flex">
-                <!-- Bind input text to inputMessage, add a placeholder message -->
-                <input type="text" class="form-control" [(ngModel)]="inputMessage" placeholder="Send a message"/>
-                <!-- Bind button to sendMessage method -->
-                <button class="btn btn-primary" (click)="sendMessage()">send</button>
-            </div>
-        
         </div>
 
     </div>
-
-</div>
-
-
-
+</main>
