@@ -31,10 +31,10 @@ var app = express();
 
 // CORS Middleware (Explicit Configuration)
 app.use(cors({
-  origin: "http://localhost:4200", // Allow requests from your frontend
-  methods: "GET,POST,PUT,DELETE,OPTIONS", // Allow specific HTTP methods
-  allowedHeaders: "Content-Type,Authorization", // Allow specific headers
-  credentials: true, // Allow cookies
+  origin: "http://localhost:4200", 
+  methods: "GET,POST,PUT,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization", 
+  credentials: true, 
 }));
 
 // Handle preflight requests (OPTIONS method)
@@ -107,7 +107,7 @@ io.on("connection", (socket) => {
   // Handle disconnection
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
-    delete connectedUsers[socket.id]; // Remove the user from the connected users list
+    delete connectedUsers[socket.id]; 
     io.emit("user-list", Object.values(connectedUsers));
   });
 });
@@ -142,11 +142,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// Passport Local Strategy
+// Passport Local 
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     try {
-      const user = await User.findOne({ email }); // Use async/await
+      const user = await User.findOne({ email }); 
       if (!user) {
         return done(null, false, { message: "User not found" });
       }
@@ -166,7 +166,7 @@ passport.use(
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findById(id); // Use async/await
+    const user = await User.findById(id); 
     done(null, user);
   } catch (err) {
     done(err);

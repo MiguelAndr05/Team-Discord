@@ -12,7 +12,7 @@ router.get('/:userId/:friendId', async (req, res) => {
         { senderId: userId, recipientId: friendId },
         { senderId: friendId, recipientId: userId },
       ],
-    }).sort({ timestamp: 1 }); // Sort messages by timestamp
+    }).sort({ timestamp: 1 }); 
     res.json(messages);
   } catch (error) {
     console.error('Failed to fetch messages:', error);
