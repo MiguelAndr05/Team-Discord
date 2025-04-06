@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { Router } from '@angular/router';
 import { SocketService } from '../../socket.service'; // Import SocketService
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-profile',
@@ -32,22 +33,30 @@ export class ProfileComponent implements OnInit {
   // String array to hold friend requests
   public friendRequest: string[] = [];
 
+  public activeChatUser: any; // Variable to store the active chat user
+
   ngOnInit(): void {
-    // Fetch the current user
     this.api.getCurrentUser().subscribe({
       next: (user) => {
-        console.log('Logged in as: ', user);
+        console.log('Logged in as: ', user); 
         this.currentUser = user;
 
-      
+        // Emit the user's data to the backend
+        this.socketService.emit('register-user', {
+          name: user.username, 
+          id: user._id,       
+        });
       },
       error: (error) => {
         console.error('Could not find user: ', error);
       },
     });
 
-    this.socketService.on('message', (data: any) => {
-      console.log('Message received from server:', data);
+    // Listen for private messages
+    this.socketService.on('private-message', (data: { text: string; senderName: string; timestamp: string }) => {
+      console.log('Private message received:', data);
+
+      // Add the private message to the messageBox
       this.messageBox.push({
         text: data.text,
         senderName: data.senderName,
@@ -79,24 +88,40 @@ export class ProfileComponent implements OnInit {
 
   sendPrivateMessage(recipientId: string) {
     const userMessage = this.inputMessage;
+  
+    
+  if (userMessage && this.activeChatUser) {
+    console.log('Active chat user:', this.activeChatUser); // Debug log
+    console.log('Sending private message to:', this.activeChatUser._id); // Debug log
 
-    if (userMessage) {
-      // Emit the private message to the server
-      this.socketService.emit('private-message', {
-        recipientId,
-        text: userMessage,
-      });
+    // Emit the private message to the server
+    this.socketService.emit('private-message', {
+      recipientId: this.activeChatUser._id, // Use the correct property for the recipient's ID
+      text: userMessage,
+    });
 
-      this.messageBox.push({
-        text: userMessage,
-        senderName: 'You', 
-        timestamp: new Date().toLocaleString(),
-      });
+    // Add the message to the local message box
+    this.messageBox.push({
+      text: userMessage,
+      senderName: 'You',
+      timestamp: new Date().toLocaleString(),
+    });
 
-      // Clear the input field after sending the message
-      this.inputMessage = '';
-    }
+    // Clear the input field after sending the message
+    this.inputMessage = '';
   }
+}
+
+  startPrivateChat(friend: any) {
+    console.log('Starting private chat with:', friend); // Debug log
+    this.activeChatUser = friend;
+    this.messageBox = []; // Clear the message box for the new chat
+  }
+
+  saveMessage() {
+
+  }
+
 
   // Logout Method
   logout() {

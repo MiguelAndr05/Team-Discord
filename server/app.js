@@ -50,29 +50,39 @@ io.on("connection", (socket) => {
 
     // Broadcast the updated user list to all clients
     io.emit("user-list", Object.values(connectedUsers));
+    console.log("Connected users:", connectedUsers);
   });
+
 
   // Handle private messages
   socket.on("private-message", (data) => {
     const { recipientId, text } = data;
-
+  
     console.log(`Private message from ${socket.id} to ${recipientId}: ${text}`);
-
+    console.log("Connected users:", connectedUsers); // Debug log
+  
     // Send the message to the recipient
-    io.to(recipientId).emit("private-message", {
-      text,
-      senderId: socket.id,
-      senderName: connectedUsers[socket.id]?.name || "Unknown User",
-      timestamp: new Date().toISOString(),
-    });
+    const recipientSocket = Object.keys(connectedUsers).find(
+      (key) => connectedUsers[key].id === recipientId
+    );
+  
+    if (recipientSocket) {
+      io.to(recipientSocket).emit("private-message", {
+        text,
+        senderId: socket.id,
+        senderName: connectedUsers[socket.id]?.name || "Unknown User",
+        timestamp: new Date().toISOString(),
+      });
+    } else {
+      console.log(`Recipient with ID ${recipientId} not found.`);
+      socket.emit("error", { message: "Recipient is not connected." });
+    }
   });
 
   // Handle disconnection
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
     delete connectedUsers[socket.id]; // Remove the user from the connected users list
-
-    // Broadcast the updated user list to all clients
     io.emit("user-list", Object.values(connectedUsers));
   });
 });

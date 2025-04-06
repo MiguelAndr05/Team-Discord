@@ -1,3 +1,4 @@
+const { User } = require("discord.js");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -15,13 +16,10 @@ const messageSchema = new Schema({
     content: {
         type: String,
     },
-    imageUrl: {
-        type: String
-    },
-    timeSent: {
+    timestamp: {
         type: Date,
-        default: Date.now
-    }
+        default: Date.now,
+    },
 });
 
 module.exports = mongoose.model("Messages", messageSchema); 
