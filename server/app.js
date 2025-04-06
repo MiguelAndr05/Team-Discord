@@ -15,6 +15,8 @@ var mongoose = require("mongoose");
 var User = require("./models/usersModel"); // Import the User model
 var { createServer } = require("http");
 var { Server } = require("socket.io");
+var Message = require('./models/messagesModel'); // Import the Message model
+
 // Connect to MongoDB
 mongoose
   .connect(configs.ConnectionString.MongoDB)
@@ -27,57 +29,80 @@ mongoose
 
 var app = express();
 
+// CORS Middleware (Explicit Configuration)
+app.use(cors({
+  origin: "http://localhost:4200", // Allow requests from your frontend
+  methods: "GET,POST,PUT,DELETE,OPTIONS", // Allow specific HTTP methods
+  allowedHeaders: "Content-Type,Authorization", // Allow specific headers
+  credentials: true, // Allow cookies
+}));
+
+// Handle preflight requests (OPTIONS method)
+app.options("*", cors());
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:4200", // Replace with your frontend URL
+    origin: "http://localhost:4200", 
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
-const connectedUsers = {}; // Store connected users with their names and socket IDs
+const connectedUsers = {}; 
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  // Handle user registration
-  socket.on("register-user", (data) => {
-    const { name, id } = data;
-    connectedUsers[socket.id] = { name, id }; // Associate the user's name and ID with their socket ID
-    console.log(`User registered: ${name} (ID: ${id}, Socket ID: ${socket.id})`);
+  if (!socket.hasRegisteredHandlers) {
+    socket.hasRegisteredHandlers = true; 
 
-    // Broadcast the updated user list to all clients
-    io.emit("user-list", Object.values(connectedUsers));
-    console.log("Connected users:", connectedUsers);
-  });
+    socket.on("register-user", (data) => {
+      const { name, id } = data;
+      connectedUsers[socket.id] = { name, id }; 
+      console.log("Connected users:", connectedUsers); 
+    });
 
+    socket.on("private-message", async (data) => {
+      const { recipientId, text } = data;
+      const senderId = connectedUsers[socket.id]?.id;
 
-  // Handle private messages
-  socket.on("private-message", (data) => {
-    const { recipientId, text } = data;
-  
-    console.log(`Private message from ${socket.id} to ${recipientId}: ${text}`);
-    console.log("Connected users:", connectedUsers); // Debug log
-  
-    // Send the message to the recipient
-    const recipientSocket = Object.keys(connectedUsers).find(
-      (key) => connectedUsers[key].id === recipientId
-    );
-  
-    if (recipientSocket) {
-      io.to(recipientSocket).emit("private-message", {
-        text,
-        senderId: socket.id,
-        senderName: connectedUsers[socket.id]?.name || "Unknown User",
-        timestamp: new Date().toISOString(),
-      });
-    } else {
-      console.log(`Recipient with ID ${recipientId} not found.`);
-      socket.emit("error", { message: "Recipient is not connected." });
-    }
-  });
+      console.log("Private message data:", { senderId, recipientId, text });
+
+      if (!senderId) {
+        console.error("Sender ID is undefined. Check if the user is registered.");
+        return;
+      }
+
+      try {
+        const message = new Message({
+          senderId,
+          recipientId,
+          text,
+        });
+
+        await message.save();
+        console.log("Message saved to database:", message);
+
+        const recipientSocket = Object.keys(connectedUsers).find(
+          (key) => connectedUsers[key].id === recipientId
+        );
+
+        if (recipientSocket) {
+          io.to(recipientSocket).emit("private-message", {
+            text,
+            senderId,
+            senderName: connectedUsers[socket.id]?.name || "Unknown User",
+            timestamp: message.timestamp,
+          });
+        } else {
+          console.log(`Recipient with ID ${recipientId} not found.`);
+        }
+      } catch (error) {
+        console.error("Failed to save message:", error);
+      }
+    });
+  }
 
   // Handle disconnection
   socket.on("disconnect", () => {
@@ -92,16 +117,8 @@ httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// CORS Middleware (Explicit Configuration)
-app.use(cors({
-  origin: "http://localhost:4200", // Allow Angular frontend
-  methods: "GET,POST,PUT,DELETE,OPTIONS", // Allowed request methods
-  allowedHeaders: "Content-Type,Authorization", // Allowed headers
-  credentials: true,
-}));
-
-// Handle preflight requests (OPTIONS method)
-app.options("*", cors());
+const messageRoutes = require('./routes/message.routes'); 
+app.use('/api/messages', messageRoutes); 
 
 app.use(logger("dev"));
 app.use(express.json());

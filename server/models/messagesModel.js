@@ -1,25 +1,26 @@
-const { User } = require("discord.js");
 const mongoose = require("mongoose");
+const { User } = require("discord.js");
 const Schema = mongoose.Schema;
 
 const messageSchema = new Schema({
-    authorId: {
-        type: Schema.Types.ObjectId,
-       ref: "User", 
-       required: true
-    },
-    receiverId:{
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-    content: {
-        type: String,
-    },
-    timestamp: {
-        type: Date,
-        default: Date.now,
-    },
+  senderId: { 
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  recipientId: { 
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  text: { 
+    type: String,
+    required: true, 
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model("Messages", messageSchema); 
+module.exports = mongoose.model("Message", messageSchema);
