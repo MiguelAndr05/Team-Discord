@@ -37,28 +37,32 @@ const io = new Server(httpServer, {
   },
 });
 
-const connectedUsers = {}; // Store connected users with their names
+const connectedUsers = {}; // Store connected users with their names and socket IDs
 
-// Handle Socket.IO connections
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
   // Handle user registration
   socket.on("register-user", (data) => {
-    const { name } = data;
-    connectedUsers[socket.id] = name; // Associate the user's name with their socket ID
-    console.log(`User registered: ${name} (Socket ID: ${socket.id})`);
+    const { name, id } = data;
+    connectedUsers[socket.id] = { name, id }; // Associate the user's name and ID with their socket ID
+    console.log(`User registered: ${name} (ID: ${id}, Socket ID: ${socket.id})`);
+
+    // Broadcast the updated user list to all clients
+    io.emit("user-list", Object.values(connectedUsers));
   });
 
-  // Handle incoming messages
-  socket.on("message", (data) => {
-    const senderName = connectedUsers[socket.id] || "Unknown User"; // Get the sender's name
-    console.log(`Message from ${senderName}:`, data.text);
+  // Handle private messages
+  socket.on("private-message", (data) => {
+    const { recipientId, text } = data;
 
-    // Broadcast the message with the sender's name
-    io.emit("message", {
-      text: data.text,
-      senderName,
+    console.log(`Private message from ${socket.id} to ${recipientId}: ${text}`);
+
+    // Send the message to the recipient
+    io.to(recipientId).emit("private-message", {
+      text,
+      senderId: socket.id,
+      senderName: connectedUsers[socket.id]?.name || "Unknown User",
       timestamp: new Date().toISOString(),
     });
   });
@@ -67,6 +71,9 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
     delete connectedUsers[socket.id]; // Remove the user from the connected users list
+
+    // Broadcast the updated user list to all clients
+    io.emit("user-list", Object.values(connectedUsers));
   });
 });
 

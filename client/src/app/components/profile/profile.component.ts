@@ -7,7 +7,7 @@ import { SocketService } from '../../socket.service'; // Import SocketService
   selector: 'app-profile',
   standalone: false,
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css',
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
   constructor(
@@ -18,8 +18,8 @@ export class ProfileComponent implements OnInit {
 
   // Variable to hold the input text
   public inputMessage: string = '';
-  // String array to hold messages between users
-  public messageBox: string[] = [];
+  // Updated type for messageBox
+  public messageBox: { text: string; senderName: string; timestamp: string }[] = [];
   // String array to hold friends
   public friendsList: string[] = [];
   // Store current user
@@ -33,28 +33,26 @@ export class ProfileComponent implements OnInit {
   public friendRequest: string[] = [];
 
   ngOnInit(): void {
-      // Fetch the current user
-      this.api.getCurrentUser().subscribe({
-        next: (user) => {
-          console.log('Logged in as: ', user);
-          this.currentUser = user;
-          console.log(user);
+    // Fetch the current user
+    this.api.getCurrentUser().subscribe({
+      next: (user) => {
+        console.log('Logged in as: ', user);
+        this.currentUser = user;
 
-          // // Emit the logged-in user's name to the server
-          // this.socketService.emit('register-user', {
-          //   name: user.username,
-          //   id: id._id // Replace with the correct property
-          // });
-
-        },
-        error: (error) => {
-          console.error('Could not find user: ', error);
-        },
-      });
+      
+      },
+      error: (error) => {
+        console.error('Could not find user: ', error);
+      },
+    });
 
     this.socketService.on('message', (data: any) => {
       console.log('Message received from server:', data);
-      this.messageBox.push(data.text); 
+      this.messageBox.push({
+        text: data.text,
+        senderName: data.senderName,
+        timestamp: new Date(data.timestamp).toLocaleString(),
+      });
     });
 
     this.socketService.on('friend-request', (data: any) => {
@@ -63,18 +61,39 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  
   sendMessage() {
     const userMessage = this.inputMessage;
 
     if (userMessage) {
-      
       this.socketService.emit('message', { text: userMessage });
 
-     
-      this.messageBox.push();
+      this.messageBox.push({
+        text: userMessage,
+        senderName: 'You',
+        timestamp: new Date().toLocaleString(),
+      });
 
-     
+      this.inputMessage = '';
+    }
+  }
+
+  sendPrivateMessage(recipientId: string) {
+    const userMessage = this.inputMessage;
+
+    if (userMessage) {
+      // Emit the private message to the server
+      this.socketService.emit('private-message', {
+        recipientId,
+        text: userMessage,
+      });
+
+      this.messageBox.push({
+        text: userMessage,
+        senderName: 'You', 
+        timestamp: new Date().toLocaleString(),
+      });
+
+      // Clear the input field after sending the message
       this.inputMessage = '';
     }
   }
@@ -92,7 +111,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
- 
   sendFriendRequest() {
     if (!this.inputFriendRequest.includes('#')) {
       alert('Please enter a valid username');
