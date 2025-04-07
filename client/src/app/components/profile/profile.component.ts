@@ -37,6 +37,8 @@ export class ProfileComponent implements OnInit {
   public activeChatUser: any; // Variable to store the active chat user
 
   ngOnInit(): void {
+
+    
     this.api.getCurrentUser().subscribe({
       next: (user) => {
         console.log('Logged in as: ', user); 
