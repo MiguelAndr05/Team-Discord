@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { User } = require("discord.js");
 const Schema = mongoose.Schema;
 
 const messageSchema = new Schema({
