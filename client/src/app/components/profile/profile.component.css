@@ -20,7 +20,6 @@ h6{
 /* 3/12 available columns, left side elements */
 .friends-list{
     background-color: rgb(165, 199, 235);
-    border-radius: 2rem 2rem;
 }
 /* used for backgrounds for friends list, requests and their individual items */
 .tab{
@@ -38,7 +37,7 @@ h6{
 
 .messagetab{
     background-color: rgb(117, 159, 204);
-    border-radius: 2rem 2rem;
+    border-radius: 1rem 1rem;
 }
 /* displayed messages as written by users */
 
@@ -53,7 +52,8 @@ h6{
     padding: 0.1rem 0.3rem 0.1rem 0.3rem;
     color: rgb(32, 99, 145);
     font-weight: 500;
-
+    margin-bottom: 10px; /* Add spacing between messages */
+    word-wrap: break-word; /* Ensure long words break to the next line */
 }
 /* messages textbox rounding and colouring */
 
@@ -79,4 +79,13 @@ h6{
 .connected{
     border: 0.2rem solid rgb(106, 185, 253);
     border-radius: 2rem 2rem;
+}
+/* Chat box container */
+.messageContent-container {
+  max-height: 400px; /* Set a maximum height for the chat box */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Hide horizontal overflow */
+  padding: 10px; /* Add some padding for better readability */
+  background-color: rgb(117, 159, 204);
+  border-radius: 5px; /* Optional: Add rounded corners */
 }

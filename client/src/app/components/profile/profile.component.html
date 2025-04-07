@@ -1,7 +1,4 @@
-<!-- Stretch container to full width of the viewport 
-     Assign it to full view height
-     Enable flexbox layout
- -->
+
 <!-- ISAIAH: moved title div outside of normal flow, added custom class title and curved to button
 -->
 <main>
@@ -11,14 +8,14 @@
     </div>
     <!-- ISAIAH: custom class added connected -->
     <div class="container-fluid min-vh-100 d-flex connected">
-
-
-
+  
+  
+  
         <!-- Friends list and messaging layout is inside this row -->
         <!-- Place content of page in layout of a row container 
          Fill entire height of the row -->
         <div class="row flex-grow-1">
-
+  
             <!-- use 3/12 available columns, add padding and margin -->
             <div class="friends-list col-md-3 p-3">
                 <!-- ISAIAH: custom class added tab -->
@@ -37,8 +34,8 @@
                         </li>
                     </ul>
                 </div>
-
-
+  
+  
                 <!-- Friend Request -->
                 <!-- ISAIAH: custom class added tab -->
                 <div class=" border rounded mt-3 tab">
@@ -72,12 +69,20 @@
                         <button class="btn btn-success curved" (click)="sendFriendRequest()">Add</button>
                     </div>
                 </div>
-
+  
             </div>
-
-
-
-
+  
+  
+            <!-- Chat Box -->
+            <div class="messageBox-container col-md-9 d-flex flex-column p-4">
+        <!-- Chat Header -->
+        <div class="chat-header border-bottom overflow-auto pb-2 mb-3">
+          <h5 *ngIf="activeChatUser">
+            Chatting with: {{activeChatUser.username}}#{{activeChatUser.discriminator}}
+          </h5>
+          <h5 *ngIf="!activeChatUser">Select a friend to start chatting</h5>
+        </div>
+  
             <!-- Use remaining 9/12 columns for the chat box
                  Enable flexbox
                  Assign column layout
@@ -85,33 +90,42 @@
             <!-- Changed to p-3 from p-4, lowered padding to match other rows -->
             <!-- ISAIAH: custom class added messagetab -->
             <div class="messageBox-container col-md-9 d-flex flex-column p-3 messagetab">
-
+  
                 <!-- Container to hold messageBox array -->
                 <!-- ISAIAH: custom class added messagesBox -->
                 <div class="messageContent-container flex-grow-1 border overflow-auto message messagesBox">
                     <!-- Create angular for loop to iterate messageBox array and print one message -->
                     <!-- ISAIAH: custom class added message -->
                     <div *ngFor="let message of messageBox" class="message">
-                        {{message}}
+                        <strong>{{message.senderName}}:</strong> {{message.text}}
+                        <span class="text-muted float-end" style="font-size: 0.8em;">
+                        {{message.timestamp}}
+                        </span>
                     </div>
                 </div>
-
-                <!-- Container to hold input text field and send button -->
-                <div class="input-text d-flex pt-1">
-                    <!-- Bind input text to inputMessage, add a placeholder message -->
-                    <div class="input-group">
-                        <!-- ISAIAH: custom class added textbox and curved to button 
-                             put input and button in input-group to appear as a merged element-->
-                        <input type="text" class="form-control textbox" [(ngModel)]="inputMessage"
-                            placeholder="Send a message" />
-                        <!-- Bind button to sendMessage method -->
-                        <button class="btn btn-primary curved" (click)="sendMessage()">Send</button>
-                    </div>
+  
+                <!-- Input Field -->
+                <div class="input-text d-flex mt-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="inputMessage"
+                    placeholder="Type your message here..."
+                    [disabled]="!activeChatUser"
+                    (keydown.enter)="sendPrivateMessage(activeChatUser.id)"
+                  />
+                  <button
+                  class="btn btn-primary"
+                  (click)="sendPrivateMessage(activeChatUser.id)"
+                  [disabled]="!activeChatUser">
+                  
+                  Send
+                </button>
                 </div>
-
+  
             </div>
-
+  
         </div>
-
+        </div>
     </div>
-</main>
+  </main>
