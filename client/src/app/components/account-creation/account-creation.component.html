@@ -1,24 +1,43 @@
-<!-- Create account formgroup -->
-<div class="createAccount-container">
-  <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
-      
-      <label>User Name</label>
-      <input type="text" name="username" id="username" formControlName="username" required />
-      
-      <label>Email</label>
-      <input type="text" name="email" id="create-email" formControlName="email" required />
-      
-      <label>Phone Number</label>
-      <input type="text" name="phonenumber" id="phonenumber" formControlName="phonenumber" />
-      
-      <label>Password</label>
-      <input type="text" name="password" id="create-password" formControlName="password" required />
-      
-      <button type="submit">Create Account</button>
+<div 
+  class="account-creation-container"
+  style="background-image: url('/discord-bg.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;"
+ 
+>
+  <!-- Top-left Discord logo and text -->
+  <div class="landing-header">
+    <img src="/discord-icon2.png" alt="Discord Logo" class="logo" />
+    <span class="logo-text">Discord</span>
+  </div>
 
-      <div *ngIf="successMessage" class="success-message">
-          <strong>{{successMessage}}</strong>
+  <!-- Form container -->
+  <div class="form-card dark">
+    <h2 class="form-title">Create an Account</h2>
+    <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" formControlName="username" required />
       </div>
 
-  </form>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" id="email" formControlName="email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="phonenumber">Phone Number</label>
+        <input type="text" id="phonenumber" formControlName="phonenumber" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" required />
+      </div>
+
+      <button type="submit" class="discord-btn">Continue</button>
+
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+    </form>
+  </div>
 </div>
