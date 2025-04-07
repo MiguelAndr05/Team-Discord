@@ -13,6 +13,9 @@ require('./configs/passport'); // Ensure Passport configuration is loaded
 var configs = require("./configs/globals");
 var mongoose = require("mongoose");
 var User = require("./models/usersModel"); // Import the User model
+var { createServer } = require("http");
+var { Server } = require("socket.io");
+var Message = require('./models/messagesModel'); // Import the Message model
 
 // Connect to MongoDB
 mongoose
@@ -28,14 +31,94 @@ var app = express();
 
 // CORS Middleware (Explicit Configuration)
 app.use(cors({
-  origin: "http://localhost:4200", // Allow Angular frontend
-  methods: "GET,POST,PUT,DELETE,OPTIONS", // Allowed request methods
-  allowedHeaders: "Content-Type,Authorization", // Allowed headers
-  credentials: true,
+  origin: "http://localhost:4200", 
+  methods: "GET,POST,PUT,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization", 
+  credentials: true, 
 }));
 
 // Handle preflight requests (OPTIONS method)
 app.options("*", cors());
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:4200", 
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+const connectedUsers = {}; 
+
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+
+  if (!socket.hasRegisteredHandlers) {
+    socket.hasRegisteredHandlers = true; 
+
+    socket.on("register-user", (data) => {
+      const { name, id } = data;
+      connectedUsers[socket.id] = { name, id }; 
+      console.log("Connected users:", connectedUsers); 
+    });
+
+    socket.on("private-message", async (data) => {
+      const { recipientId, text } = data;
+      const senderId = connectedUsers[socket.id]?.id;
+
+      console.log("Private message data:", { senderId, recipientId, text });
+
+      if (!senderId) {
+        console.error("Sender ID is undefined. Check if the user is registered.");
+        return;
+      }
+
+      try {
+        const message = new Message({
+          senderId,
+          recipientId,
+          text,
+        });
+
+        await message.save();
+        console.log("Message saved to database:", message);
+
+        const recipientSocket = Object.keys(connectedUsers).find(
+          (key) => connectedUsers[key].id === recipientId
+        );
+
+        if (recipientSocket) {
+          io.to(recipientSocket).emit("private-message", {
+            text,
+            senderId,
+            senderName: connectedUsers[socket.id]?.name || "Unknown User",
+            timestamp: message.timestamp,
+          });
+        } else {
+          console.log(`Recipient with ID ${recipientId} not found.`);
+        }
+      } catch (error) {
+        console.error("Failed to save message:", error);
+      }
+    });
+  }
+
+  // Handle disconnection
+  socket.on("disconnect", () => {
+    console.log("A user disconnected:", socket.id);
+    delete connectedUsers[socket.id]; 
+    io.emit("user-list", Object.values(connectedUsers));
+  });
+});
+
+const PORT = 3000;
+httpServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+const messageRoutes = require('./routes/message.routes'); 
+app.use('/api/messages', messageRoutes); 
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -59,11 +142,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// Passport Local Strategy
+// Passport Local 
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     try {
-      const user = await User.findOne({ email }); // Use async/await
+      const user = await User.findOne({ email }); 
       if (!user) {
         return done(null, false, { message: "User not found" });
       }
@@ -83,7 +166,7 @@ passport.use(
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findById(id); // Use async/await
+    const user = await User.findById(id); 
     done(null, user);
   } catch (err) {
     done(err);
@@ -94,11 +177,5 @@ passport.deserializeUser(async (id, done) => {
 app.use("/", indexRouter);
 app.use("/api/users", usersRouter);
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
 
 module.exports = app;
-
-
