@@ -19,14 +19,14 @@ h6{
 }
 /* 3/12 available columns, left side elements */
 .friends-list{
-    background-color: rgb(165, 199, 235);
+    background-color: #2c2f33;
 }
 /* used for backgrounds for friends list, requests and their individual items */
 .tab{
-    background-color: rgb(205, 232, 255);
-    color: rgb(39, 125, 182);
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-weight: 400;
-    border-bottom: 0.1 solid rgb(126, 195, 255);
+    border-bottom: 0.1 solid #2c2f33;
 }
 /* used for borders of friends list and requests. The whole list of both */
 
@@ -71,7 +71,7 @@ h6{
 /* friend request textbox colouring and curving */
 
 .friend-textbox{
-    background-color: rgb(153, 199, 226);
+    background-color: rgb(255, 255, 255);
     border-radius: 3rem 3rem;
 }
 /* makes left and right side appear more connected with a border */

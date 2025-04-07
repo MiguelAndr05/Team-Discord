@@ -7,6 +7,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AccountCreationComponent } from './components/account-creation/account-creation.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,7 @@ import { LoginComponent } from './components/login/login.component';
         //FriendListComponent,
         AccountCreationComponent,
         ProfileComponent, // Declare the component here
-        LoginComponent, // Declare the component here
+        LoginComponent, HomeComponent, // Declare the component here
     ],
     imports: [
         BrowserModule,
