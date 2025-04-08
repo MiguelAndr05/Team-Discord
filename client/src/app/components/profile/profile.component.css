@@ -2,41 +2,49 @@
 main{
     background-color: rgb(190, 225, 255);
 }
-/* display welcome message with username */
+/* display welcome message with username     border-radius: 2rem 2rem;
+*/
 .title{
     text-align: center;
-    background-color: rgb(145, 190, 238);
-    border-radius: 2rem 2rem;
-    color: rgb(42, 135, 189);
-    text-shadow: 0.1rem 0.1rem rgba(2, 127, 199, 0.596);
+    background-image: linear-gradient(to top, rgb(12, 31, 116), rgb(154, 39, 207)  );
+    color: rgb(255, 255, 255);
+    text-shadow: 0.1rem 0.1rem rgb(148, 105, 185);
 
 }
 /* common look for all h6 elements; friends list, requests and add friends */
 h6{
-    color: rgb(33, 106, 155);
-    text-shadow: 0.05rem 0.05rem rgba(2, 127, 199, 0.596);
+    color: rgb(255, 255, 255);
+    text-shadow: 0.1rem 0.1rem rgb(148, 105, 185);
 
 }
 /* 3/12 available columns, left side elements */
 .friends-list{
-    background-color: #2c2f33;
+    background-color: rgb(90, 73, 100);
+    background-image: linear-gradient(to top, rgb(110, 97, 83),rgb(35, 33, 36));
 }
+
+.friendSelected{
+    color: rgb(255, 255, 255);
+    text-shadow: 0.1rem 0.1rem rgb(148, 105, 185);
+
+}
+
 /* used for backgrounds for friends list, requests and their individual items */
 .tab{
-    background-color: rgb(255, 255, 255);
-    color: rgb(0, 0, 0);
-    font-weight: 400;
-    border-bottom: 0.1 solid #2c2f33;
+    background-color: rgb(96, 0, 151);
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+    border: 1px solid rgb(0, 0, 0);
 }
 /* used for borders of friends list and requests. The whole list of both */
 
 .tablist{
-    border: 0.1rem solid rgb(126, 195, 255);
 }
 /* 9/12 of available column, right side used for messages */
 
 .messagetab{
     background-color: rgb(117, 159, 204);
+    background-image: linear-gradient(to top, rgb(12, 31, 116), rgb(154, 39, 207)  );
     border-radius: 1rem 1rem;
 }
 /* displayed messages as written by users */
@@ -50,7 +58,7 @@ h6{
 
 .message{
     padding: 0.1rem 0.3rem 0.1rem 0.3rem;
-    color: rgb(32, 99, 145);
+    color: rgb(109, 46, 180);
     font-weight: 500;
     margin-bottom: 10px; /* Add spacing between messages */
     word-wrap: break-word; /* Ensure long words break to the next line */
@@ -58,27 +66,54 @@ h6{
 /* messages textbox rounding and colouring */
 
 .textbox{
-    background-color: rgb(92, 128, 194);;
-    border: 0.2rem solid rgb(75, 122, 163);
+    border: none;
+    background-color: rgb(168, 147, 173);
     border-radius: 3rem 3rem;
-
 }
 /* curves each button to make edges less rough */
 
 .curved{
     border-radius: 3rem 3rem;
 }
+
+.reflex div.icon{
+    display: none;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1015px ){
+    .reflex div.text{
+        display: none;        
+    }
+
+    .reflex div.icon{
+        display: inline-block;
+
+    }
+
+    .reflex div.icon img{
+        background-image: url("../../../../public/messageIcon2.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+}
+
 /* friend request textbox colouring and curving */
 
 .friend-textbox{
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(168, 147, 173);
+    border: none;
     border-radius: 3rem 3rem;
 }
 /* makes left and right side appear more connected with a border */
 
 .connected{
+    /*
     border: 0.2rem solid rgb(106, 185, 253);
     border-radius: 2rem 2rem;
+    */
 }
 /* Chat box container */
 .messageContent-container {
@@ -86,6 +121,14 @@ h6{
   overflow-y: auto; /* Enable vertical scrolling */
   overflow-x: hidden; /* Hide horizontal overflow */
   padding: 10px; /* Add some padding for better readability */
-  background-color: rgb(117, 159, 204);
+  background-color: rgb(168, 147, 173);
   border-radius: 5px; /* Optional: Add rounded corners */
+}
+
+.bgImg{
+    background-image: url("../../../../public/fitToSize.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 }

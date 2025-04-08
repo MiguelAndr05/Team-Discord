@@ -1,25 +1,24 @@
-
 <!-- ISAIAH: moved title div outside of normal flow, added custom class title and curved to button
 -->
 <main>
-    <div class="container-fluid shadow py-3 title">
+    <div class="container-fluid shadow-lg py-3 title">
         <h2 *ngIf="currentUser">Welcome, {{currentUser.username}}!</h2>
         <button class="btn btn-danger curved" (click)="logout()">Logout</button>
     </div>
     <!-- ISAIAH: custom class added connected -->
     <div class="container-fluid min-vh-100 d-flex connected">
-  
-  
-  
+
+
+
         <!-- Friends list and messaging layout is inside this row -->
         <!-- Place content of page in layout of a row container 
          Fill entire height of the row -->
         <div class="row flex-grow-1">
-  
+
             <!-- use 3/12 available columns, add padding and margin -->
             <div class="friends-list col-md-3 p-3">
                 <!-- ISAIAH: custom class added tab -->
-                <div class="border rounded tab">
+                <div class="rounded tab">
                     <h6 class="text-center">Friends</h6>
                     <!-- Create list for friends -->
                     <!-- ISAIAH: custom class added tablist -->
@@ -30,15 +29,17 @@
                         <li *ngFor="let friend of currentUser.friendsList"
                             class="list-group-item d-flex justify-content-between align-items-center tab">
                             {{friend.username}}#{{friend.discriminator}}
-                            <button (click)="startPrivateChat(friend)">Message</button>                        
+                            <button (click)="startPrivateChat(friend)" class="btn btn-primary curved reflex" >
+                                <div class="text">Message</div><div class="icon"><img/></div>
+                            </button>
                         </li>
                     </ul>
                 </div>
-  
-  
+
+
                 <!-- Friend Request -->
                 <!-- ISAIAH: custom class added tab -->
-                <div class=" border rounded mt-3 tab">
+                <div class="rounded mt-3 tab">
                     <h6 class="text-center">Friend Requests</h6>
                     <!-- ISAIAH: custom class added tablist -->
                     <ul class="list-group tablist">
@@ -59,7 +60,7 @@
                     </ul>
                 </div>
                 <!-- ISAIAH: custom class added tab -->
-                <div class="border rounded mt-3 p-2 tab">
+                <div class="rounded mt-3 p-2 tab">
                     <h6 class="text-center">Add Friend</h6>
                     <div class="input-group">
                         <!-- ISAIAH: custom class added friend-textbox and curved to button 
@@ -69,63 +70,55 @@
                         <button class="btn btn-success curved" (click)="sendFriendRequest()">Add</button>
                     </div>
                 </div>
-  
+
             </div>
-  
-  
+
+
             <!-- Chat Box -->
-            <div class="messageBox-container col-md-9 d-flex flex-column p-4">
-        <!-- Chat Header -->
-        <div class="chat-header border-bottom overflow-auto pb-2 mb-3">
-          <h5 *ngIf="activeChatUser">
-            Chatting with: {{activeChatUser.username}}#{{activeChatUser.discriminator}}
-          </h5>
-          <h5 *ngIf="!activeChatUser">Select a friend to start chatting</h5>
-        </div>
-  
-            <!-- Use remaining 9/12 columns for the chat box
+            <div class="messageBox-container col-md-9 d-flex flex-column p-4 bgImg">
+                <!-- Chat Header -->
+                <div class="chat-header border-bottom overflow-auto pb-2 mb-3">
+                    <h5 *ngIf="activeChatUser" class="friendSelected">
+                        Chatting with: {{activeChatUser.username}}#{{activeChatUser.discriminator}}
+                    </h5>
+                    <h5 *ngIf="!activeChatUser"  class="friendSelected">Select a friend to start chatting</h5>
+                </div>
+
+                <!-- Use remaining 9/12 columns for the chat box
                  Enable flexbox
                  Assign column layout
                  Add padding-->
-            <!-- Changed to p-3 from p-4, lowered padding to match other rows -->
-            <!-- ISAIAH: custom class added messagetab -->
-            <div class="messageBox-container col-md-9 d-flex flex-column p-3 messagetab">
-  
-                <!-- Container to hold messageBox array -->
-                <!-- ISAIAH: custom class added messagesBox -->
-                <div class="messageContent-container flex-grow-1 border overflow-auto message messagesBox">
-                    <!-- Create angular for loop to iterate messageBox array and print one message -->
-                    <!-- ISAIAH: custom class added message -->
-                    <div *ngFor="let message of messageBox" class="message">
-                        <strong>{{message.senderName}}:</strong> {{message.text}}
-                        <span class="text-muted float-end" style="font-size: 0.8em;">
-                        {{message.timestamp}}
-                        </span>
+                <!-- Changed to p-3 from p-4, lowered padding to match other rows -->
+                <!-- ISAIAH: custom class added messagetab -->
+                <div class="messageBox-container col-md-9 d-flex flex-column p-3 messagetab">
+
+                    <!-- Container to hold messageBox array -->
+                    <!-- ISAIAH: custom class added messagesBox -->
+                    <div class="messageContent-container flex-grow-1 border overflow-auto message messagesBox">
+                        <!-- Create angular for loop to iterate messageBox array and print one message -->
+                        <!-- ISAIAH: custom class added message -->
+                        <div *ngFor="let message of messageBox" class="message">
+                            <strong>{{message.senderName}}:</strong> {{message.text}}
+                            <span class="text-muted float-end" style="font-size: 0.8em;">
+                                {{message.timestamp}}
+                            </span>
+                        </div>
                     </div>
+
+                    <!-- Input Field -->
+                    <div class="input-text d-flex mt-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control textbox" [(ngModel)]="inputMessage"
+                            placeholder="Type your message here..." [disabled]="!activeChatUser"
+                            (keydown.enter)="sendPrivateMessage(activeChatUser.id)" />
+                            <button class="btn btn-primary curved" (click)="sendPrivateMessage(activeChatUser.id)"
+                             [disabled]="!activeChatUser">Send</button>
+                        </div>
+                    </div>
+
                 </div>
-  
-                <!-- Input Field -->
-                <div class="input-text d-flex mt-3">
-                  <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="inputMessage"
-                    placeholder="Type your message here..."
-                    [disabled]="!activeChatUser"
-                    (keydown.enter)="sendPrivateMessage(activeChatUser.id)"
-                  />
-                  <button
-                  class="btn btn-primary"
-                  (click)="sendPrivateMessage(activeChatUser.id)"
-                  [disabled]="!activeChatUser">
-                  
-                  Send
-                </button>
-                </div>
-  
+
             </div>
-  
-        </div>
         </div>
     </div>
-  </main>
+</main>
