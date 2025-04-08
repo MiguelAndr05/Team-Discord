@@ -21,8 +21,7 @@
                 <div class="rounded tab">
                     <h6 class="text-center">Friends</h6>
                     <!-- Create list for friends -->
-                    <!-- ISAIAH: custom class added tablist -->
-                    <ul class="list-group tablist">
+                    <ul class="list-group">
                         <!-- Create angular for loop to iterate friendsList array -->
                         <!-- Grab friend item in "this" currentUser object's friendList array -->
                         <!-- ISAIAH: custom class added tab -->
@@ -41,8 +40,7 @@
                 <!-- ISAIAH: custom class added tab -->
                 <div class="rounded mt-3 tab">
                     <h6 class="text-center">Friend Requests</h6>
-                    <!-- ISAIAH: custom class added tablist -->
-                    <ul class="list-group tablist">
+                    <ul class="list-group">
                         <!-- ISAIAH: custom class added tab -->
                         <li *ngFor="let request of currentUser.friendRequests"
                             class="list-group-item d-flex justify-content-between align-items-center tab">
