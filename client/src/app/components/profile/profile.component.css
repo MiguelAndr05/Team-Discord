@@ -72,27 +72,18 @@ h6{
 .curved{
     border-radius: 3rem 3rem;
 }
-
-.reflex div.icon{
+/* icon doesn't appear unless screen is within certain size */
+.reflex i{
     display: none;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1015px ){
-    .reflex div.text{
+    .reflex div{
         display: none;        
     }
 
-    .reflex div.icon{
+    .reflex i{
         display: inline-block;
-
-    }
-
-    .reflex div.icon img{
-        background-image: url("../../../../public/messageIcon2.png");
-        background-size: cover;
-        background-repeat: no-repeat;
-        width: 1.5rem;
-        height: 1.5rem;
     }
 
 }
@@ -116,7 +107,7 @@ h6{
 }
 
 .bgImg{
-    background-image: url("../../../../public/fitToSize.png");
+    background-image: url("../../../../public/profile-page-bg.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;

@@ -8,8 +8,8 @@ import { HomeComponent } from './components/home/home.component';
 
 //Array of routes to each component
 const routes: Routes = [
-  {path: '', redirectTo: 'login', pathMatch: 'full'},
-  { path: 'home', component: HomeComponent }, 
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: 'home', component: HomeComponent }, 
   {path: 'account-creation', component: AccountCreationComponent},
   {path: 'login', component: LoginComponent},
   {path: 'profile', component: ProfileComponent},

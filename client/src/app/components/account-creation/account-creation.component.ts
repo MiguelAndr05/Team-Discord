@@ -56,4 +56,8 @@ export class AccountCreationComponent implements OnInit {
     }
   }
 
+  toHome(): void{
+    this.router.navigate(['/home']);
+  }
+
 }
