@@ -1,0 +1,115 @@
+/* acts as body of page */
+main{
+    background-color: rgb(190, 225, 255);
+}
+/* display welcome message with username     border-radius: 2rem 2rem;
+*/
+.title{
+    text-align: center;
+    background-image: linear-gradient(to top, rgb(12, 31, 116), rgb(154, 39, 207)  );
+    color: rgb(255, 255, 255);
+    text-shadow: 0.1rem 0.1rem rgb(148, 105, 185);
+
+}
+/* common look for all h6 elements; friends list, requests and add friends */
+h6{
+    color: rgb(255, 255, 255);
+    text-shadow: 0.1rem 0.1rem rgb(148, 105, 185);
+
+}
+/* 3/12 available columns, left side elements */
+.friends-list{
+    background-color: rgb(90, 73, 100);
+    background-image: linear-gradient(to top, rgb(110, 97, 83),rgb(35, 33, 36));
+}
+
+.friendSelected{
+    color: rgb(255, 255, 255);
+    text-shadow: 0.1rem 0.1rem rgb(148, 105, 185);
+
+}
+
+/* used for backgrounds for friends list, requests and their individual items */
+.tab{
+    background-color: rgb(96, 0, 151);
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+/* 9/12 of available column, right side used for messages */
+
+.messagetab{
+    background-color: rgb(117, 159, 204);
+    background-image: linear-gradient(to top, rgb(12, 31, 116), rgb(154, 39, 207)  );
+    border-radius: 1rem 1rem;
+}
+/* displayed messages as written by users */
+
+.messagesBox{
+    border: 2rem solid rgb(75, 122, 163);
+    border-radius: 1rem 1rem;
+    padding: 0.2rem;
+}
+/* individual messages spaced out and bolded slight for readability */
+
+.message{
+    padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+    color: rgb(109, 46, 180);
+    font-weight: 500;
+    margin-bottom: 10px; /* Add spacing between messages */
+    word-wrap: break-word; /* Ensure long words break to the next line */
+}
+/* messages textbox rounding and colouring */
+
+.textbox{
+    border: none;
+    background-color: rgb(168, 147, 173);
+    border-radius: 3rem 3rem;
+}
+/* curves each button to make edges less rough */
+
+.curved{
+    border-radius: 3rem 3rem;
+}
+/* icon doesn't appear unless screen is within certain size */
+.reflex i{
+    display: none;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1015px ){
+    .reflex div{
+        display: none;        
+    }
+
+    .reflex i{
+        display: inline-block;
+    }
+
+}
+
+/* friend request textbox colouring and curving */
+
+.friend-textbox{
+    background-color: rgb(168, 147, 173);
+    border: none;
+    border-radius: 3rem 3rem;
+}
+
+/* Chat box container */
+.messageContent-container {
+  max-height: 400px; /* Set a maximum height for the chat box */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Hide horizontal overflow */
+  padding: 10px; /* Add some padding for better readability */
+  background-color: rgb(168, 147, 173);
+  border-radius: 5px; /* Optional: Add rounded corners */
+}
+
+.bgImg{
+    background-image: url("../../../../public/profile-page-bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}

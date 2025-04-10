@@ -1,0 +1,98 @@
+/* Reset and global styles for the component */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Main background container with the image */
+  .landing-container {
+    background-image: url('/discord-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100vh;
+    width: 100%;
+    color: white;
+    position: relative;
+  }
+  
+  /* Top-left logo and text */
+  .landing-header {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    text-decoration: none;
+  }
+  
+  /* Logo icon */
+  .logo {
+    height: 70px;
+    width: 70px;
+    margin-right: 4px;
+    object-fit: contain;
+  }
+  
+  /* Discord brand text */
+  .logo-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+  }
+  
+  /* Centered title/subtitle content */
+  .landing-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    max-width: 700px;
+    padding: 20px;
+    color: white;
+  }
+  
+  /* Big headline */
+  .landing-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  /* Subheadline paragraph */
+  .landing-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #ddd;
+  }
+  
+  /* Button container (NEW) */
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 16px; /* spacing between buttons */
+  }
+  
+  /* White button with black text */
+  .cta-button {
+    background-color: white;
+    color: black;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Slight hover effect */
+  .cta-button:hover {
+    background-color: #f5f5f5;
+  }
+  
