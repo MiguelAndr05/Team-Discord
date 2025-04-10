@@ -16,6 +16,7 @@ var User = require("./models/usersModel"); // Import the User model
 var { createServer } = require("http");
 var { Server } = require("socket.io");
 var Message = require('./models/messagesModel'); // Import the Message model
+var MongoStore = require('connect-mongo');
 
 // Connect to MongoDB
 mongoose
@@ -124,10 +125,18 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+//Session 
+//Store session in db
 app.use(session({
   secret: "your_secret_key",
   resave: false,
   saveUninitialized: false,
+  //connect mongo to db string, assign collection name 
+  store: MongoStore.create({
+    mongoUrl: configs.ConnectionString.MongoDB,
+    collectionName: 'sessions'
+  })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
