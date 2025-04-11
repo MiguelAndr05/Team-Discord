@@ -44,7 +44,7 @@ export class ApiService {
 
   // Fetch the current user
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>('/api/users/me'); 
+    return this.http.get<User>('https://team-discord-server.onrender.com/api/users/me'); 
   }
 
   getMessages(userId: string, friendId: string): Observable<Message[]> {
