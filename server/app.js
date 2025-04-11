@@ -126,6 +126,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 //Store Session in mongo db
+app.set('trust proxy', 1);
 app.use(session({
   secret: "your_secret_key",
   resave: false,
@@ -136,7 +137,10 @@ app.use(session({
     collectionName: 'sessions'
   }),
   cookie:{
-    maxAge: 3600000
+    maxAge: 3600000,
+    sameSite: 'none',   
+    secure: true,       
+    httpOnly: true
   }
 }));
 app.use(passport.initialize());
