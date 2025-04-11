@@ -38,8 +38,7 @@ app.use(cors({
   credentials: true, 
 }));
 
-// Handle preflight requests (OPTIONS method)
-app.options("*", cors());
+
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -135,7 +134,10 @@ app.use(session({
   store: MongoStore.create({
     mongoUrl: configs.ConnectionString.MongoDB,
     collectionName: 'sessions'
-  })
+  }),
+  cookie:{
+    maxAge: 3600000
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
