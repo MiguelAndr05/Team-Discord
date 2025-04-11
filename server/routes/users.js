@@ -59,12 +59,13 @@ router.post('/loginAccount', (req, res, next) => {
 
 //Identify "me" current user
 router.get('/me', async (req, res) => {
-  //Debug statements
-  console.log("Session check in /me:", req.session);
-  console.log("Authenticated?", req.isAuthenticated());
-  console.log("User from session:", req.user);
+  
 
   try{
+    //Debug statements
+    console.log("Session check in /me:", req.session);
+    console.log("Authenticated?", req.isAuthenticated());
+    console.log("User from session:", req.user);
 
   //Check if user is authenticated
   if(!req.isAuthenticated()){
