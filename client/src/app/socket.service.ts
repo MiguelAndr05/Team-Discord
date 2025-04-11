@@ -9,7 +9,7 @@ export class SocketService {
 
   constructor() {
     // Connect to the Socket.IO server
-    this.socket = io('http://localhost:3000'); // Replace with your server URL
+    this.socket = io('https://team-discord-server.onrender.com'); // Replace with your server URL
 
     // Log connection status
     this.socket.on('connect', () => {
