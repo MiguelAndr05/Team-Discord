@@ -126,8 +126,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-//Session 
-//Store session in db
+//Store Session in mongo db
 app.use(session({
   secret: "your_secret_key",
   resave: false,
