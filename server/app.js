@@ -32,7 +32,7 @@ var app = express();
 
 // CORS Middleware (Explicit Configuration)
 app.use(cors({
-  origin: "http://localhost:4200", 
+  origin: "https://team-discord-client.onrender.com", 
   methods: "GET,POST,PUT,DELETE,OPTIONS",
   allowedHeaders: "Content-Type,Authorization", 
   credentials: true, 
@@ -44,7 +44,7 @@ app.options("*", cors());
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:4200", 
+    origin: "https://team-discord-client.onrender.com", 
     methods: ["GET", "POST"],
     credentials: true,
   },

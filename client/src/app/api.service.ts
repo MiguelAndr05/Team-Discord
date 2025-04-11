@@ -11,7 +11,7 @@ import { Message } from './models/message.model';
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:3000/api/message';
+  private apiUrl = 'https://team-discord-server.onrender.com/api/message';
 
   constructor(private http: HttpClient) {}
 
@@ -23,7 +23,7 @@ export class ApiService {
   //Post to create user
   createAccountPost(userPost: any) {
     return this.http.post(
-      'http://localhost:3000/api/users/createAccount',
+      'https://team-discord-server.onrender.com/api/users/createAccount',
       userPost,
       {
         withCredentials: true,
@@ -34,7 +34,7 @@ export class ApiService {
   //Post to login to existing user
   loginAccountPost(accountData: any) {
     return this.http.post(
-      'http://localhost:3000/api/users/loginAccount',
+      'https://team-discord-server.onrender.com/api/users/loginAccount',
       accountData,
       {
         withCredentials: true,
@@ -49,7 +49,7 @@ export class ApiService {
 
   getMessages(userId: string, friendId: string): Observable<Message[]> {
   return this.http.get<Message[]>(
-    `http://localhost:3000/api/messages/${userId}/${friendId}`,
+    `https://team-discord-server.onrender.com/api/messages/${userId}/${friendId}`,
     {
       withCredentials: true, 
     }
@@ -62,7 +62,7 @@ export class ApiService {
 
   //Logout of user account
   logoutUser() {
-    return this.http.get('http://localhost:3000/api/users/logout', {
+    return this.http.get('https://team-discord-server.onrender.com/api/users/logout', {
       withCredentials: true,
     });
   }
@@ -70,7 +70,7 @@ export class ApiService {
   //Post Friend Request
   sendFriendRequestPost(receiverUsername: string, receiverDiscriminator: string) {
     return this.http.post(
-      'http://localhost:3000/api/users/sendFriendRequest',
+      'https://team-discord-server.onrender.com/api/users/sendFriendRequest',
       {
         receiverUsername,
         receiverDiscriminator,
@@ -84,7 +84,7 @@ export class ApiService {
   //Accept Friend request
   acceptFriendRequestPost(senderID: string) {
     return this.http.post(
-      'http://localhost:3000/api/users/acceptFriendRequest',
+      'https://team-discord-server.onrender.com/api/users/acceptFriendRequest',
       {
         senderID,
       },
@@ -97,7 +97,7 @@ export class ApiService {
   //Decline Friend request
   declineFriendRequestPost(senderID: string) {
     return this.http.post(
-      'http://localhost:3000/api/users/declineFriendRequest',
+      'https://team-discord-server.onrender.com/api/users/declineFriendRequest',
       {
         senderID,
       },
