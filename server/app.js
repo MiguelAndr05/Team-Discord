@@ -187,11 +187,6 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-//Render debug
-app.use((req, res, next) => {
-  console.log(`[${req.method}] ${req.originalUrl}`);
-  next();
-});
 
 
 app.use("/", indexRouter);
