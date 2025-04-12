@@ -9,13 +9,13 @@ var LocalStrategy = require("passport-local").Strategy;
 var bcrypt = require("bcryptjs");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-require('./configs/passport'); // Ensure Passport configuration is loaded
+require('./configs/passport');
 var configs = require("./configs/globals");
 var mongoose = require("mongoose");
-var User = require("./models/usersModel"); // Import the User model
+var User = require("./models/usersModel"); 
 var { createServer } = require("http");
 var { Server } = require("socket.io");
-var Message = require('./models/messagesModel'); // Import the Message model
+var Message = require('./models/messagesModel');
 var MongoStore = require('connect-mongo');
 
 // Connect to MongoDB
@@ -125,13 +125,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-//Store Session in mongo db
+// Store Session in mongo db
 app.set('trust proxy', 1);
 app.use(session({
   secret: "your_secret_key",
   resave: false,
   saveUninitialized: false,
-  //connect mongo to db string, assign collection name 
+  // connect mongo to db string, assign collection name 
   store: MongoStore.create({
     mongoUrl: configs.ConnectionString.MongoDB,
     collectionName: 'sessions'
@@ -146,7 +146,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Tracking session info for debugging
+// Tracking session info for debugging
 app.use((req, res, next) => {
   console.log('--- Session Debug ---');
   console.log('Session ID:', req.sessionID);

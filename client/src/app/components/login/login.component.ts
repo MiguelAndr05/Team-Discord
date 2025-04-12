@@ -21,22 +21,14 @@ export class LoginComponent implements OnInit {
   };
       
   ngOnInit(): void {
-
-    // //Initialize this instance of createAccount form
-    // this.createAccountForm = new FormGroup({
-    //   username: new FormControl('', Validators.required),
-    //   email: new FormControl('', Validators.required),
-    //   phonenumber: new FormControl(''),
-    //   password: new FormControl('', Validators.required)
-    // });
-
+   
     //Initialize this instance of login form
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required)
     });
   }
-
+// Initialize this instance of create account form
   onLogin(){
     if(this.loginForm.valid){
       this.apiService.loginAccountPost(this.loginForm.value).subscribe({

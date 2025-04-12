@@ -100,7 +100,7 @@
 
 .success-message {
   margin-top: 1rem;
-  color: #43b581; /* Discord green success color */
+  color: #43b581; 
   font-weight: bold;
   text-align: center;
 }

@@ -1,4 +1,4 @@
-/* Reset and global styles for the component */
+
 body, html {
     margin: 0;
     padding: 0;
@@ -6,7 +6,7 @@ body, html {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   
-  /* Main background container with the image */
+  
   .landing-container {
     background-image: url('/discord-bg.jpg');
     background-size: cover;
@@ -19,7 +19,7 @@ body, html {
     position: relative;
   }
   
-  /* Top-left logo and text */
+ 
   .landing-header {
     display: flex;
     align-items: center;
@@ -30,7 +30,7 @@ body, html {
     text-decoration: none;
   }
   
-  /* Logo icon */
+ 
   .logo {
     height: 70px;
     width: 70px;
@@ -38,14 +38,14 @@ body, html {
     object-fit: contain;
   }
   
-  /* Discord brand text */
+ 
   .logo-text {
     font-size: 2.5rem;
     font-weight: bold;
     color: white;
   }
   
-  /* Centered title/subtitle content */
+  
   .landing-content {
     position: absolute;
     top: 50%;
@@ -57,28 +57,28 @@ body, html {
     color: white;
   }
   
-  /* Big headline */
+ 
   .landing-title {
     font-size: 3rem;
     font-weight: bold;
     margin-bottom: 1rem;
   }
   
-  /* Subheadline paragraph */
+
   .landing-subtitle {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     color: #ddd;
   }
   
-  /* Button container (NEW) */
+
   .button-group {
     display: flex;
     justify-content: center;
-    gap: 16px; /* spacing between buttons */
+    gap: 16px; 
   }
   
-  /* White button with black text */
+ 
   .cta-button {
     background-color: white;
     color: black;
@@ -91,7 +91,7 @@ body, html {
     transition: background-color 0.3s ease;
   }
   
-  /* Slight hover effect */
+  
   .cta-button:hover {
     background-color: #f5f5f5;
   }

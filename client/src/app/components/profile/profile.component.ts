@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { Router } from '@angular/router';
-import { SocketService } from '../../socket.service'; // Import SocketService
+import { SocketService } from '../../socket.service'; 
 import { User } from '../../models/user.model';
 import { Message } from '../../models/message.model';
 
@@ -15,7 +15,7 @@ export class ProfileComponent implements OnInit {
   constructor(
     private api: ApiService,
     private router: Router,
-    private socketService: SocketService // Inject SocketService
+    private socketService: SocketService 
   ) {}
 
   // Variable to hold the input text
@@ -33,8 +33,8 @@ export class ProfileComponent implements OnInit {
 
   // String array to hold friend requests
   public friendRequest: string[] = [];
-
-  public activeChatUser: any; // Variable to store the active chat user
+// Variable to store the active chat user
+  public activeChatUser: any; 
 
   ngOnInit(): void {
     this.api.getCurrentUser().subscribe({
@@ -92,7 +92,7 @@ export class ProfileComponent implements OnInit {
 
     if (userMessage && this.activeChatUser) {
       console.log('Emitting private-message event:', {
-        recipientId: recipientId || this.activeChatUser._id, // Use the passed recipientId or fallback to activeChatUser._id
+        recipientId: recipientId || this.activeChatUser._id, 
         text: userMessage,
       });
 
@@ -116,15 +116,15 @@ export class ProfileComponent implements OnInit {
 
   startPrivateChat(friend: any) {
     console.log('Starting private chat with:', friend);
-    console.log('Current user ID:', this.currentUser._id); // Debug log
-    console.log('Friend ID:', friend._id); // Debug log
+    console.log('Current user ID:', this.currentUser._id); 
+    console.log('Friend ID:', friend._id); 
   
     this.activeChatUser = friend;
   
     // Fetch messages from the database
     this.api.getMessages(this.currentUser._id, friend._id).subscribe({
       next: (messages: Message[]) => {
-        console.log('Fetched messages:', messages); // Debug log
+        console.log('Fetched messages:', messages);
         this.messageBox = messages.map((message) => ({
           text: message.text,
           senderName: message.senderId === this.currentUser._id ? 'You' : friend.username,
@@ -132,7 +132,7 @@ export class ProfileComponent implements OnInit {
         }));
       },
       error: (error) => {
-        console.error('Failed to fetch messages:', error); // Debug log
+        console.error('Failed to fetch messages:', error);
       },
     });
   }
@@ -156,7 +156,7 @@ export class ProfileComponent implements OnInit {
             timestamp: new Date().toLocaleString(),
           });
 
-          // Clear the input field
+          
           this.inputMessage = '';
         },
         error: (error) => {
@@ -178,7 +178,7 @@ export class ProfileComponent implements OnInit {
       },
     });
   }
-
+  // Add Friend Method
   sendFriendRequest() {
     if (!this.inputFriendRequest.includes('#')) {
       alert('Please enter a valid username');
